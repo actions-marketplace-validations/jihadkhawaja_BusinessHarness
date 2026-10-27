@@ -1,0 +1,10 @@
+{
+  "source": "custom-tracker",
+  "eventId": "comment-123",
+  "actor": "YOUR_TRUSTED_GITHUB_LOGIN",
+  "text": "@businessharness export timestamps must retain microsecond precision. Please check this in the next review.",
+  "url": "https://tracker.example.com/issues/42#comment-123",
+  "repositoryId": "github:github.com/YOUR_ORG/YOUR_REPO",
+  "sessionId": "pr:42",
+  "references": ["PROJ-123"]
+}

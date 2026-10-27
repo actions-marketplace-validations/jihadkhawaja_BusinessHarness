@@ -1,0 +1,9 @@
+{
+  "provider": "openai",
+  "failOn": "high",
+  "maxFiles": 60,
+  "maxDiffBytes": 200000,
+  "maxFileDiffBytes": 64000,
+  "timeoutSeconds": 120,
+  "maxOutputTokens": 6000
+}

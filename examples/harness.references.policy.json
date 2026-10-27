@@ -1,0 +1,23 @@
+{
+  "model": "YOUR_STRUCTURED_OUTPUT_MODEL",
+  "referenceSources": [
+    {
+      "name": "specs",
+      "pattern": "https://docs\\.example\\.com/specs/(?<id>[A-Za-z0-9-]+)",
+      "endpoint": "https://api.example.com/specs/{id}",
+      "titlePath": "data.title",
+      "contentPath": "data.content",
+      "tokenEnvironment": "SPEC_API_TOKEN"
+    },
+    {
+      "name": "tracker",
+      "pattern": "(?<![A-Za-z0-9_])WORK-(?<id>[1-9][0-9]*)(?![A-Za-z0-9_])",
+      "endpoint": "https://tracker.example.com/api/issues/{id}",
+      "titlePath": "title",
+      "contentPath": "description",
+      "tokenEnvironment": "TRACKER_API_TOKEN",
+      "authenticationHeader": "X-Api-Key",
+      "authenticationScheme": ""
+    }
+  ]
+}

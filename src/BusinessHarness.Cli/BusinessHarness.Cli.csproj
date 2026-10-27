@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>businessharness</ToolCommandName>
+    <PackageId>BusinessHarness.Tool</PackageId>
+    <Description>AI repository review, dynamic references, scoped MAGICore memory and optional PR feedback.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../BusinessHarness.Application/BusinessHarness.Application.csproj" />
+    <ProjectReference Include="../BusinessHarness.Infrastructure/BusinessHarness.Infrastructure.csproj" />
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="../../external/MAGICore/LICENSE" Pack="true" PackagePath="licenses/MAGICore/" />
+  </ItemGroup>
+</Project>

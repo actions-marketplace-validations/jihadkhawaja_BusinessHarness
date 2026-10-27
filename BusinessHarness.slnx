@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/external/">
+    <Project Path="external/MAGICore/src/MagiCore/MagiCore.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/BusinessHarness.Application/BusinessHarness.Application.csproj" />
+    <Project Path="src/BusinessHarness.Cli/BusinessHarness.Cli.csproj" />
+    <Project Path="src/BusinessHarness.Core/BusinessHarness.Core.csproj" />
+    <Project Path="src/BusinessHarness.Infrastructure/BusinessHarness.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BusinessHarness.Tests/BusinessHarness.Tests.csproj" />
+  </Folder>
+</Solution>

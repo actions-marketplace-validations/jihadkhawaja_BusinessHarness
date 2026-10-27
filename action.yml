@@ -1,0 +1,121 @@
+name: BusinessHarness
+description: Repository review, dynamic reference discovery and optional PR feedback using OpenAI or Claude
+branding:
+  icon: check-circle
+  color: blue
+inputs:
+  command:
+    description: scan or review
+    default: review
+  base:
+    description: Target commit SHA (must be fetched)
+    required: true
+  head:
+    description: Source commit SHA (must be fetched)
+    required: true
+  provider:
+    description: openai or anthropic
+    default: openai
+  model:
+    description: API model identifier supporting structured outputs (required for review)
+  config:
+    description: Optional absolute path to policy from a trusted checkout
+  issues:
+    description: Optional explicit comma-separated Jira keys
+  change:
+    description: Optional GitHub PR or GitLab MR URL (otherwise discovered from CI)
+  references:
+    description: Optional explicit SOURCE:ID references; sources are configured in trusted policy
+  feedback:
+    description: none, comment or auto; auto approves passing reviews and requests changes on failures
+    default: none
+  github-token:
+    description: Token for PR metadata and optional feedback; feedback requires pull-requests write
+    default: ${{ github.token }}
+  memory-scope:
+    description: Optional off, global, repository or session override
+  memory-directory:
+    description: Persistent memory directory outside the checkout and reports
+  session:
+    description: Optional stable session ID (defaults to PR/MR identity)
+  event:
+    description: Optional verified follow-up event path; actor and mention must match trusted memory policy
+outputs:
+  reports:
+    description: Absolute report directory (available even when the review gate fails)
+    value: ${{ runner.temp }}/businessharness-results
+runs:
+  using: composite
+  steps:
+    - name: Prepare trusted source and pinned submodule
+      shell: bash
+      env:
+        HARNESS_ACTION_REPOSITORY: ${{ github.action_repository }}
+        HARNESS_ACTION_REF: ${{ github.action_ref }}
+        HARNESS_SOURCE_TOKEN: ${{ inputs.github-token }}
+      run: |
+        if [[ -e "$GITHUB_ACTION_PATH/.git" ]]; then
+          source_dir="$GITHUB_ACTION_PATH"
+        else
+          # Downloaded action archives omit submodule contents and Git metadata.
+          source_dir="$(mktemp -d "$RUNNER_TEMP/businessharness-source.XXXXXX")"
+          git init "$source_dir"
+          if [[ -z "$HARNESS_ACTION_REPOSITORY" || -z "$HARNESS_ACTION_REF" ]]; then
+            echo 'Cannot identify the trusted action revision for submodule initialization.' >&2
+            exit 2
+          fi
+          source_url="https://github.com/$HARNESS_ACTION_REPOSITORY.git"
+          if [[ -n "$HARNESS_SOURCE_TOKEN" ]]; then
+            auth="$(printf 'x-access-token:%s' "$HARNESS_SOURCE_TOKEN" | base64 | tr -d '\r\n')"
+            echo "::add-mask::$auth"
+            GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.https://github.com/.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+              git -C "$source_dir" fetch --depth=1 "$source_url" "$HARNESS_ACTION_REF"
+          else
+            git -C "$source_dir" fetch --depth=1 "$source_url" "$HARNESS_ACTION_REF"
+          fi
+          git -C "$source_dir" checkout --detach FETCH_HEAD
+        fi
+        git -C "$source_dir" submodule update --init --recursive
+        echo "HARNESS_BUILD_SOURCE=$source_dir" >> "$GITHUB_ENV"
+    - name: Install .NET SDK
+      uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+      with:
+        dotnet-version: 10.0.403
+    - name: Build trusted action source
+      shell: bash
+      working-directory: ${{ env.HARNESS_BUILD_SOURCE }}
+      env:
+        DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+        DOTNET_CLI_HOME: ${{ runner.temp }}/businessharness-dotnet
+        NUGET_PACKAGES: ${{ runner.temp }}/businessharness-nuget
+      run: |
+        dotnet restore src/BusinessHarness.Cli/BusinessHarness.Cli.csproj --locked-mode --configfile NuGet.Config
+        dotnet publish src/BusinessHarness.Cli/BusinessHarness.Cli.csproj -c Release --no-restore --output "$RUNNER_TEMP/businessharness-bin"
+    - name: Run BusinessHarness
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      env:
+        HARNESS_COMMAND: ${{ inputs.command }}
+        HARNESS_BASE: ${{ inputs.base }}
+        HARNESS_HEAD: ${{ inputs.head }}
+        HARNESS_PROVIDER: ${{ inputs.provider }}
+        HARNESS_MODEL: ${{ inputs.model }}
+        HARNESS_CONFIG: ${{ inputs.config }}
+        HARNESS_ISSUES: ${{ inputs.issues }}
+        HARNESS_CHANGE: ${{ inputs.change }}
+        HARNESS_REFERENCES: ${{ inputs.references }}
+        HARNESS_FEEDBACK: ${{ inputs.feedback }}
+        HARNESS_MEMORY_SCOPE: ${{ inputs.memory-scope }}
+        HARNESS_MEMORY_DIRECTORY: ${{ inputs.memory-directory }}
+        HARNESS_SESSION_ID: ${{ inputs.session }}
+        HARNESS_EVENT: ${{ inputs.event }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        args=("$HARNESS_COMMAND" --repo "$GITHUB_WORKSPACE" --base "$HARNESS_BASE" --head "$HARNESS_HEAD" --output "$RUNNER_TEMP/businessharness-results")
+        if [[ -n "$HARNESS_CONFIG" ]]; then args+=(--config "$HARNESS_CONFIG"); fi
+        if [[ -n "$HARNESS_ISSUES" ]]; then args+=(--issue "$HARNESS_ISSUES"); fi
+        if [[ -n "$HARNESS_CHANGE" ]]; then args+=(--change "$HARNESS_CHANGE"); fi
+        if [[ -n "$HARNESS_REFERENCES" ]]; then args+=(--reference "$HARNESS_REFERENCES"); fi
+        if [[ -n "$HARNESS_EVENT" ]]; then args+=(--event "$HARNESS_EVENT"); fi
+        args+=(--feedback "$HARNESS_FEEDBACK")
+        dotnet "$RUNNER_TEMP/businessharness-bin/BusinessHarness.Cli.dll" "${args[@]}"

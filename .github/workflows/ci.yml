@@ -1,0 +1,43 @@
+name: Build and security checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      TESTINGPLATFORM_TELEMETRY_OPTOUT: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          submodules: recursive
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: 10.0.403
+      - run: ./scripts/Verify.ps1
+        shell: pwsh
+      - run: ./scripts/Smoke-Test.ps1
+        shell: pwsh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tool-${{ matrix.os }}
+          path: artifacts/packages/*.nupkg
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          submodules: recursive
+      - run: docker build --pull --tag businessharness:test .
+      - run: docker run --rm --read-only --cap-drop=ALL --security-opt=no-new-privileges businessharness:test --version
+      - run: ./scripts/Smoke-Test.ps1 -ContainerImage businessharness:test
+        shell: pwsh

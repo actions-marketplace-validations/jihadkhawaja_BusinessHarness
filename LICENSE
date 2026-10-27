@@ -1,0 +1,83 @@
+BusinessHarness Personal Non-Commercial and Commercial License
+Version 1.0
+
+Copyright (c) 2026 Jihad Khawaja. All rights reserved.
+
+1. Scope
+
+This license applies to BusinessHarness and its accompanying source code,
+executables, packages, container images, scripts, examples, and documentation
+(the "Software"), except third-party materials governed by their own licenses.
+Jihad Khawaja is the licensor (the "Licensor").
+
+2. Free individual, non-commercial use
+
+An individual acting solely in a personal capacity may use, copy, study, modify,
+and share the Software without a license fee, solely for personal,
+non-commercial purposes, subject to this license. Examples include personal
+learning, experimentation, and personal projects that do not serve a commercial
+purpose or an organization.
+
+Non-commercial use means use that is not intended for or directed toward
+commercial advantage, business operations, monetary compensation, or other
+economic benefit, directly or indirectly. This permission does not cover work
+for an employer, customer, client, business, enterprise, or other organization,
+even when an individual performs that work or no fee is charged for the
+Software itself.
+
+3. Paid commercial and enterprise use
+
+Commercial use, and use by or on behalf of a business, enterprise, employer,
+institution, or other organization, requires a separate paid commercial license
+from the Licensor before such use begins. This requirement applies regardless
+of an organization's size or profit status.
+
+Examples include using the Software in business or enterprise repositories or
+CI/CD pipelines, internal organizational tooling, paid consulting or client
+work, commercial products or services, hosted services, and commercial
+redistribution or resale.
+
+To obtain pricing and a commercial or enterprise license, contact:
+
+    Jihad Khawaja
+    jihadkhawaja@outlook.com
+
+Contacting the Licensor does not itself grant commercial or enterprise rights.
+Those rights are governed by a separate written agreement with the Licensor.
+
+4. Notices, modifications, and redistribution
+
+Keep this license and the copyright notice with every copy or substantial
+portion of the Software, including modified versions. Clearly identify your
+modifications. You may not remove these restrictions, relicense the Software
+under terms that grant broader rights, or represent that the free license
+permits commercial or organizational use.
+
+Anyone receiving a copy is subject to this license and must obtain a separate
+paid license when their intended use requires one. Sharing or modifying the
+Software does not expand the permissions granted here. No trademark or
+endorsement rights are granted.
+
+5. Ownership and termination
+
+The Licensor retains all rights in the Software not expressly granted by this
+license. The permissions granted by this license terminate automatically if
+you violate its terms. Upon termination, stop using and distributing the
+Software and delete copies under your control, unless a separate written
+agreement permits continued use.
+
+6. Disclaimer of warranty and limitation of liability
+
+TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, THE SOFTWARE IS PROVIDED
+"AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+AND NON-INFRINGEMENT. IN NO EVENT SHALL THE LICENSOR OR COPYRIGHT HOLDER BE
+LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE
+SOFTWARE OR ITS USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+7. Third-party materials
+
+Third-party dependencies and materials retain their respective copyrights and
+licenses. This license does not replace those licenses or grant rights the
+Licensor does not hold.

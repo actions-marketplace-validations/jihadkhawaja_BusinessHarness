@@ -1,0 +1,35 @@
+# Normalize text to LF, matching .editorconfig on every platform.
+* text=auto eol=lf
+
+# Windows command scripts require CRLF when checked out.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Use Git's C# diff driver for meaningful hunk headers.
+*.cs diff=csharp
+
+# Treat binary assets as binary: no text conversion, diffs, or text merges.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.avif binary
+*.bmp binary
+*.tif binary
+*.tiff binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tgz binary
+*.7z binary
+*.nupkg binary
+*.snupkg binary
+*.dll binary
+*.exe binary
+*.pdb binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary

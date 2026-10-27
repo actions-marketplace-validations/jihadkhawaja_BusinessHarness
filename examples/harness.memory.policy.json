@@ -1,0 +1,19 @@
+{
+  "model": "YOUR_STRUCTURED_OUTPUT_MODEL",
+  "memory": {
+    "enabled": true,
+    "scope": "repository",
+    "readScopes": ["repository"],
+    "namespace": "my-team",
+    "repositoryId": "github:github.com/YOUR_ORG/YOUR_REPO",
+    "directory": "/var/lib/businessharness/memory",
+    "retentionDays": 90,
+    "maxEntries": 2000,
+    "topK": 8,
+    "maxContextCharacters": 16000,
+    "captureReviews": true,
+    "acceptFollowUps": true,
+    "agentMentions": ["@businessharness"],
+    "allowedActors": ["YOUR_TRUSTED_GITHUB_LOGIN"]
+  }
+}
