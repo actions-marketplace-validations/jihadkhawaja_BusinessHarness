@@ -1,0 +1,33 @@
+# Azure Repos: configure a build-validation branch policy for this pipeline.
+# Other repository types can use their native PR trigger. Keep YAML/templates trusted.
+# Define HarnessImage=image@sha256:digest and HarnessModel; store OpenAiApiKey as a secret.
+trigger: none
+pool:
+  vmImage: ubuntu-latest
+steps:
+  - checkout: self
+    fetchDepth: 0
+    persistCredentials: false
+  - bash: |
+      set -euo pipefail
+      mkdir -p "$HARNESS_REPORTS"
+      docker run --rm --read-only --cap-drop=ALL --security-opt=no-new-privileges \
+        --user "$(id -u):$(id -g)" \
+        --mount "type=bind,source=$BUILD_SOURCESDIRECTORY,target=/repo,readonly" \
+        --mount "type=bind,source=$HARNESS_REPORTS,target=/reports" \
+        -e OPENAI_API_KEY -e HARNESS_MODEL \
+        "$HARNESS_IMAGE" review --repo /repo --base "$HARNESS_BASE" --head "$HARNESS_HEAD" --output /reports
+    displayName: Review pull request
+    env:
+      HARNESS_IMAGE: $(HarnessImage)
+      HARNESS_MODEL: $(HarnessModel)
+      OPENAI_API_KEY: $(OpenAiApiKey)
+      # Azure PR checkout is a merge commit: parent 1 is target, parent 2 is source.
+      HARNESS_BASE: HEAD^1
+      HARNESS_HEAD: HEAD^2
+      HARNESS_REPORTS: $(Agent.TempDirectory)/businessharness-results
+  - task: PublishPipelineArtifact@1
+    condition: always()
+    inputs:
+      targetPath: $(Agent.TempDirectory)/businessharness-results
+      artifact: businessharness-review

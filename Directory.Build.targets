@@ -1,0 +1,11 @@
+<Project>
+  <!-- Adapt the pinned upstream project without modifying the submodule checkout. -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'MagiCore'">
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <NuGetLockFilePath>$(MSBuildThisFileDirectory)locks/MagiCore.packages.lock.json</NuGetLockFilePath>
+    <PackageLicenseFile />
+  </PropertyGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'MagiCore'">
+    <PackageReference Update="Microsoft.Extensions.AI.Abstractions;Microsoft.Extensions.VectorData.Abstractions;System.Numerics.Tensors" Version="" />
+  </ItemGroup>
+</Project>

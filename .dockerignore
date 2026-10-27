@@ -1,0 +1,12 @@
+.git
+**/.git
+**/bin
+**/obj
+**/TestResults
+artifacts
+harness-results
+.env*
+tests
+docs
+examples
+.github

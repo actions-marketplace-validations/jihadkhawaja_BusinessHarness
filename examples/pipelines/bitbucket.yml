@@ -1,0 +1,21 @@
+# Replace the image with your published image@sha256:digest.
+# Set HARNESS_MODEL and secured OPENAI_API_KEY variables. Use a trusted pipeline definition.
+image: YOUR_REGISTRY/businessharness@sha256:REPLACE_WITH_DIGEST
+clone:
+  depth: full
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: BusinessHarness review
+          script:
+            # Explicit fetch happens in CI, outside the read-only review runner.
+            - git fetch origin "$BITBUCKET_PR_DESTINATION_COMMIT"
+            - >-
+              dotnet /app/BusinessHarness.Cli.dll review
+              --repo "$BITBUCKET_CLONE_DIR"
+              --base "$BITBUCKET_PR_DESTINATION_COMMIT"
+              --head "$BITBUCKET_COMMIT"
+              --output "$BITBUCKET_CLONE_DIR/harness-results"
+          artifacts:
+            - harness-results/**
