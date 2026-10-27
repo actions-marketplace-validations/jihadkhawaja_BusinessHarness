@@ -91,6 +91,8 @@ For deliberate dependency maintenance, run `./scripts/Update-Dependencies.ps1`, 
 
 Run `./scripts/Verify.ps1` for the complete build/test/format/audit/package check, then `./scripts/Smoke-Test.ps1` for end-to-end CLI checks. After building the image, `./scripts/Smoke-Test.ps1 -ContainerImage businessharness:0.1.0` tests the same cases in a container with networking disabled, a read-only root filesystem and read-only source mount.
 
+For Codex contributions, follow [AGENTS.md](AGENTS.md). Project agents for security review, validation and supply-chain review are defined in [`.codex/agents`](.codex/agents); see [usage and review examples](docs/codex.md).
+
 ## Reports and errors
 
 `review.json`, `review.md`, and `review.sarif` are written on a completed scan/review, including a failed quality gate. Integration failures write `error.json` once a writable output directory has been selected. No raw diffs, credentials, or HTTP bodies are logged. Exit `0` means the selected mode passed; offline scan is explicitly labeled and does not claim an AI review.

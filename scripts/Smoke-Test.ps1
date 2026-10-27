@@ -72,3 +72,6 @@ if (Test-Path -LiteralPath (Join-Path $reports 'review.json')) { throw 'A stale 
 $errorReport = Get-Content -LiteralPath (Join-Path $reports 'error.json') -Raw | ConvertFrom-Json
 if ($errorReport.errorCode -ne 'BH1003') { throw 'Expected structured Git failure.' }
 Write-Output "Smoke checks passed: clean=0, finding=1, missing-ref=3. Artifacts: $runRoot"
+# GitHub Actions propagates LASTEXITCODE even when all PowerShell assertions pass.
+# Clear the expected negative-case status only after every check has succeeded.
+$global:LASTEXITCODE = 0
