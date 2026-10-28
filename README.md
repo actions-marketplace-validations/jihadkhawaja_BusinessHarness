@@ -1,4 +1,18 @@
-# BusinessHarness
+<div align="center">
+    <a href="https://businessharness.net/">
+        <img src="assets/readme-header.svg" alt="BusinessHarness - Put every change in context" width="100%" />
+    </a>
+</div>
+
+<h1 align="center">BusinessHarness</h1>
+
+<p align="center"><strong>Put every change in context.</strong></p>
+
+<p align="center">
+    Bounded AI diff review, reference validation, and optional review memory for your CI pipeline.
+</p>
+
+<div align="center">
 
 [![Build and security checks](https://github.com/jihadkhawaja/BusinessHarness/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jihadkhawaja/BusinessHarness/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/BusinessHarness.svg)](https://www.nuget.org/packages/BusinessHarness)
@@ -6,6 +20,8 @@
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4)](https://dotnet.microsoft.com/download/dotnet/10.0)
 [![License](https://img.shields.io/badge/license-personal%20non--commercial-blue)](LICENSE)
+
+</div>
 
 Review code changes, check them against tickets and specs, and catch potential issues before merging. BusinessHarness is a .NET 10 CLI that runs locally or in GitHub Actions, GitLab CI, Azure DevOps, and Bitbucket Pipelines.
 

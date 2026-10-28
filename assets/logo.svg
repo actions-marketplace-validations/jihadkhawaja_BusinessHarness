@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 180" width="800" height="180" role="img" aria-label="BusinessHarness Logo">
+  <defs>
+    <linearGradient id="logoMarkBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#26342b"/>
+      <stop offset="100%" stop-color="#141c17"/>
+    </linearGradient>
+    <linearGradient id="logoOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff7f59"/>
+      <stop offset="50%" stop-color="#e05a36"/>
+      <stop offset="100%" stop-color="#ba3c1b"/>
+    </linearGradient>
+    <linearGradient id="logoSilver" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#f6f5f1"/>
+      <stop offset="100%" stop-color="#d4d1c5"/>
+    </linearGradient>
+    <filter id="logoShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Left Emblem Mark -->
+  <g transform="translate(20, 26)" filter="url(#logoShadow)">
+    <rect width="128" height="128" rx="28" fill="url(#logoMarkBg)" stroke="#374b3f" stroke-width="1.5"/>
+    <rect x="2" y="2" width="124" height="124" rx="26" fill="none" stroke="#ffffff" stroke-width="1" stroke-opacity="0.06"/>
+
+    <!-- 'b' Glyph -->
+    <path d="M 36 32 
+             V 96 
+             H 50 
+             C 68 96, 68 58, 50 58 
+             H 36" 
+          fill="none" 
+          stroke="url(#logoSilver)" 
+          stroke-width="9.5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+
+    <!-- 'h' Stem -->
+    <path d="M 68 32 V 96" 
+          fill="none" 
+          stroke="url(#logoSilver)" 
+          stroke-width="9.5" 
+          stroke-linecap="round"/>
+
+    <!-- 'h' Terracotta Arch -->
+    <path d="M 68 58 
+             C 68 40, 92 40, 92 58 
+             V 96" 
+          fill="none" 
+          stroke="url(#logoOrange)" 
+          stroke-width="9.5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+
+    <!-- Green Beacon -->
+    <circle cx="92" cy="96" r="3.2" fill="#8ce0a0"/>
+  </g>
+
+  <!-- Typography Lockup -->
+  <text x="176" y="92" 
+        fill="#f6f5f1" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" 
+        font-size="52" 
+        font-weight="800" 
+        letter-spacing="-1.8">BusinessHarness<tspan fill="#e05a36">.</tspan></text>
+
+  <!-- Subtitle / Tagline -->
+  <text x="178" y="128" 
+        fill="#94a89c" 
+        font-family="'Consolas', 'Cascadia Code', 'Courier New', monospace" 
+        font-size="13" 
+        font-weight="600" 
+        letter-spacing="2">BOUNDED DIFF REVIEW <tspan fill="#e05a36">&#8226;</tspan> SPEC VALIDATION <tspan fill="#8ce0a0">&#8226;</tspan> CI GATE</text>
+
+  <!-- Capability Badges (Right side) -->
+  <g transform="translate(650, 44)">
+    <rect width="118" height="28" rx="5" fill="#18221c" stroke="#2e3f34" stroke-width="1.2"/>
+    <text x="59" y="18" fill="#8ce0a0" font-family="'Consolas', monospace" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="1">.NET 10 CLI</text>
+  </g>
+  <g transform="translate(650, 80)">
+    <rect width="118" height="28" rx="5" fill="#18221c" stroke="#2e3f34" stroke-width="1.2"/>
+    <text x="59" y="18" fill="#e05a36" font-family="'Consolas', monospace" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="1">AI BOUNDED</text>
+  </g>
+  <g transform="translate(650, 116)">
+    <rect width="118" height="26" rx="5" fill="#18221c" stroke="#2e3f34" stroke-width="1.2"/>
+    <text x="59" y="17" fill="#889d90" font-family="'Consolas', monospace" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1">ZERO LEAK</text>
+  </g>
+</svg>

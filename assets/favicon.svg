@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#111713"/>
+  <!-- Base 'b' -->
+  <path d="M18 16v32h7c9 0 9-19 0-19h-7" fill="none" stroke="#f6f5f1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Center 'h' -->
+  <path d="M34 16v32" fill="none" stroke="#f6f5f1" stroke-width="5" stroke-linecap="round"/>
+  <!-- Arch 'h' -->
+  <path d="M34 29c0-9 12-9 12 0v19" fill="none" stroke="#e05a36" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Green Beacon -->
+  <circle cx="46" cy="48" r="2.5" fill="#8ce0a0"/>
+</svg>

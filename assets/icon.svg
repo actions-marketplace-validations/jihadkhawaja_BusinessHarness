@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="BusinessHarness Icon">
+  <defs>
+    <!-- Background Gradient: Deep Obsidian Slate -->
+    <linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18221c"/>
+      <stop offset="50%" stop-color="#111713"/>
+      <stop offset="100%" stop-color="#0a0e0b"/>
+    </linearGradient>
+
+    <!-- Warm Ambient Spotlight -->
+    <radialGradient id="ambientGlow" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#e05a36" stop-opacity="0.16"/>
+      <stop offset="50%" stop-color="#8ce0a0" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#0a0e0b" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Terracotta Arch Gradient -->
+    <linearGradient id="harnessOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff7f59"/>
+      <stop offset="50%" stop-color="#e05a36"/>
+      <stop offset="100%" stop-color="#ba3c1b"/>
+    </linearGradient>
+
+    <!-- Linen Silver Gradient for Base 'b' -->
+    <linearGradient id="baseSilver" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#f6f5f1"/>
+      <stop offset="100%" stop-color="#d4d1c5"/>
+    </linearGradient>
+
+    <!-- Status Green Glow -->
+    <filter id="beaconGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Drop Shadow for Glyph -->
+    <filter id="markShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000000" flood-opacity="0.7"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle App Container -->
+  <rect width="512" height="512" rx="116" fill="url(#iconBg)"/>
+  <rect width="512" height="512" rx="116" fill="url(#ambientGlow)"/>
+
+  <!-- Subtle Rim Highlight -->
+  <rect x="2" y="2" width="508" height="508" rx="114" fill="none" stroke="#2f4236" stroke-width="2" stroke-opacity="0.6"/>
+  <rect x="6" y="6" width="500" height="500" rx="110" fill="none" stroke="#ffffff" stroke-width="1" stroke-opacity="0.05"/>
+
+  <!-- Main Monogram Glyph -->
+  <g filter="url(#markShadow)">
+    <!-- Base Glyph 'b' in Warm Silver Linen -->
+    <path d="M 144 130 
+             V 382 
+             H 200 
+             C 272 382, 272 230, 200 230 
+             H 144"
+          fill="none" 
+          stroke="url(#baseSilver)" 
+          stroke-width="38" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+
+    <!-- Center Spine 'h' in Warm Silver Linen -->
+    <path d="M 272 130 V 382" 
+          fill="none" 
+          stroke="url(#baseSilver)" 
+          stroke-width="38" 
+          stroke-linecap="round"/>
+
+    <!-- Dynamic Harness Arch in Terracotta Ember -->
+    <path d="M 272 230 
+             C 272 160, 368 160, 368 230 
+             V 382" 
+          fill="none" 
+          stroke="url(#harnessOrange)" 
+          stroke-width="38" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+  </g>
+
+  <!-- Technical Verification Beacon on Right Foot -->
+  <g filter="url(#beaconGlow)">
+    <circle cx="368" cy="382" r="14" fill="#8ce0a0" opacity="0.3"/>
+    <circle cx="368" cy="382" r="8" fill="#8ce0a0"/>
+  </g>
+
+  <!-- Anchor Telemetry Dot at Arch Peak -->
+  <circle cx="320" cy="178" r="6" fill="#ff9b7a" opacity="0.9"/>
+</svg>
