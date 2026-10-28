@@ -2,6 +2,51 @@
 
 The CLI contract is identical across vendors. A completed review returns 0/1; integration errors return 2–10. Always retain the report directory even on failure. No organization/repository IDs, hosted image names, model IDs or tokens have been invented for you; replace the marked placeholders before deploying.
 
+## PR review scope
+
+Every platform and provider uses **merge-base(target, source) → source head**:
+the aggregate PR/MR diff across all commits, including additions, modifications,
+and deletions. Three surrounding lines provide context. Unchanged files,
+target-only changes, and uncommitted content remain outside provider input.
+Findings must anchor to actual added lines. Jira and other linked specifications
+use the same evidence; unseen code and runtime behavior remain `not_verifiable`.
+
+Schedule on PR/MR creation and source updates without file-path filters. Rerun
+after metadata edits that change linked references; hosts without such pipeline
+events need a manual rerun or authenticated webhook integration. Secret access
+still follows the platform's approval and fork protections.
+
+## This repository's automatic PR review
+
+[pr-review.yml](../.github/workflows/pr-review.yml) schedules reviews for PRs
+targeting `main` on open, reopen, source push, title/description edit, and readiness
+for review. Its `pull_request_target` workflow builds only the trusted workflow
+revision from the base branch, then fetches PR commits as Git objects. It never
+checks out or executes PR files, hooks, scripts, tests, or submodules. Fresh
+GitHub-hosted runners use read-only GitHub permissions and `--feedback none`;
+reports are retained for seven days. Automatic runs do not post review comments.
+The separate [mention workflow](../.github/workflows/review.yml) remains available
+for [maintainer-requested review comments](#test-reviews-in-this-repository).
+
+Use the `ai-review` environment, restricted to `main`, with `HARNESS_MODEL` and
+the selected provider's API key. `HARNESS_PROVIDER` defaults to `openai`; use
+`anthropic` with `ANTHROPIC_API_KEY` for Claude. For Jira discovery, set variable
+`HARNESS_JIRA_SITE` and secrets `JIRA_EMAIL` and `JIRA_API_TOKEN`, then include
+issue keys in PR metadata. Without Jira configuration or other configured
+sources, reviews contain no reference assessments. Custom acceptance-criteria
+fields and other sources require an explicit `--config` from the trusted checkout.
+Missing credentials/model configuration fail the job. Memory is disabled for
+automatic runs. Fork PRs can trigger the automatic review, but cannot supply
+executable workflow, harness, or policy code to the job.
+
+Protect privileged workflow changes through maintainer review and configure
+environment approvals where supported. Keep credentials unavailable to PR branch
+workflows. Automatic runs send bounded review context to the configured provider;
+they do not replace the build/test checks in [ci.yml](../.github/workflows/ci.yml).
+The event runs in base-branch context and does not publish a separate status on
+the PR source SHA; add a trusted status publisher before using it as a required
+PR-head merge check. The workflow becomes active after reaching `main`.
+
 ## NuGet.org releases
 
 The public package ID is `BusinessHarness`; its executable is `businessharness`.
@@ -73,8 +118,8 @@ The report mount must be writable by the selected UID. The source mount must inc
 
 ## Platform specifics
 
-- **GitHub:** copy [github.yml](../examples/pipelines/github.yml), replace the action ref, configure `HARNESS_MODEL`, and store `OPENAI_API_KEY` as an environment secret under an `ai-review` environment with required reviewers. `fetch-depth: 0` supplies the source, target and merge base. The example restricts forks but still requires trusted workflow definitions and environment approvals. Change provider/key for Claude. Configure Jira variables or trusted `referenceSources` for automatic discovery. The action supplies its GitHub token for metadata access. Set `feedback: comment` or `feedback: auto` and `pull-requests: write` to publish feedback. A separate eligible bot token can be passed through `github-token`. The composite uses Bash and requires a runner with Bash and Git (GitHub-hosted Ubuntu is recommended).
-- **GitLab:** copy/include [gitlab.yml](../examples/pipelines/gitlab.yml) in a trusted pipeline, define `HARNESS_IMAGE` as an image digest, and configure protected/masked provider variables and model. The image entrypoint is cleared so GitLab can execute its shell script. Configure `GITLAB_TOKEN` for MR metadata access and an eligible bot with `api` scope if enabling `--feedback comment` or `--feedback auto`. Standard detached MR pipelines are supported by the shown refs. Merged-result/merge-train policies should pass their intended source commit explicitly. Protected secrets may be unavailable unless both branches and the user meet GitLab's protected-resource rules; the runner reports this as configuration failure rather than silently skipping review.
+- **GitHub:** copy [github.yml](../examples/pipelines/github.yml), replace the action ref, configure `HARNESS_MODEL`, and store `OPENAI_API_KEY` as an environment secret under an `ai-review` environment with required reviewers. `fetch-depth: 0` supplies the source, target and merge base. The trusted-base example schedules PR creation, source updates, and metadata edits, including forks. Never execute PR code; protect workflow definitions and environment secret access. Set HARNESS_PROVIDER and the matching key for Claude. Configure Jira variables or trusted `referenceSources` for automatic discovery. The action supplies its GitHub token for metadata access. Set `feedback: comment` or `feedback: auto` and `pull-requests: write` to publish feedback. A separate eligible bot token can be passed through `github-token`. The composite uses Bash and requires a runner with Bash and Git (GitHub-hosted Ubuntu is recommended).
+- **GitLab:** copy/include [gitlab.yml](../examples/pipelines/gitlab.yml) in a trusted pipeline, define `HARNESS_IMAGE` as an image digest, and configure protected/masked provider variables and model. The image entrypoint is cleared so GitLab can execute its shell script. Configure `GITLAB_TOKEN` for MR metadata access and an eligible bot with `api` scope if enabling `--feedback comment` or `--feedback auto`. Same-project MR reviews run automatically. Detached pipelines use CI_COMMIT_SHA; merged-result/merge-train pipelines use CI_MERGE_REQUEST_SOURCE_BRANCH_SHA to exclude synthetic target changes. Forks retain secret isolation. Protected secrets may be unavailable unless both branches and the user meet GitLab's protected-resource rules; the runner reports this as configuration failure rather than silently skipping review.
 - **Azure DevOps:** use [azure-devops.yml](../examples/pipelines/azure-devops.yml) as a branch build-validation pipeline for Azure Repos. The example assumes the normal PR merge-commit checkout, using parent 1 as target and parent 2 as source. If your checkout strategy differs, pass explicit fetched commit IDs instead. Define the image, model and secret variable. Protect the YAML/template and secret access through your organization policies.
 - **Bitbucket:** copy [bitbucket.yml](../examples/pipelines/bitbucket.yml), replace the image digest and configure model plus secured provider variable. Bitbucket's PR preparation can merge the target into the working tree; the example deliberately passes `BITBUCKET_COMMIT` as source and the destination commit as base, rather than using that synthetic checkout HEAD. Fetch the destination commit outside the runner first. Keep fork pipelines isolated from secrets.
 
