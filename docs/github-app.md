@@ -47,8 +47,10 @@ of autocomplete. See [GitHub agent apps](https://docs.github.com/en/enterprise-c
 
 ## Review template
 
-The renderer fixes the structure; models supply bounded, validated plain-text
-content. Every finding has a severity, category, exact changed-file path and added
+The renderer uses a [default Markdown template](../src/BusinessHarness.Infrastructure/Templates/review-comment.md);
+models supply bounded, validated plain-text content. Customize headings and section
+order through trusted `reviewCommentTemplate` policy or `--comment-template PATH`;
+see [template configuration](configuration.md#review-comment-templates). Every finding has a severity, category, exact changed-file path and added
 line, trigger/impact, and a concrete minimal fix. Categories are `security`,
 `maintainability`, and `correctness`; security and substantive change risks receive
 priority. Cosmetic preferences and speculative advice are excluded.

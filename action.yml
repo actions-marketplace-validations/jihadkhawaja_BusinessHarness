@@ -29,6 +29,8 @@ inputs:
   feedback:
     description: none, comment or auto; auto approves passing reviews and requests changes on failures
     default: none
+  comment-template:
+    description: Optional absolute path to a trusted UTF-8 Markdown review comment template
   github-token:
     description: Token for PR metadata and optional feedback; feedback requires pull-requests write
     default: ${{ github.token }}
@@ -105,6 +107,7 @@ runs:
         HARNESS_CHANGE: ${{ inputs.change }}
         HARNESS_REFERENCES: ${{ inputs.references }}
         HARNESS_FEEDBACK: ${{ inputs.feedback }}
+        HARNESS_COMMENT_TEMPLATE: ${{ inputs.comment-template }}
         HARNESS_MEMORY_SCOPE: ${{ inputs.memory-scope }}
         HARNESS_MEMORY_DIRECTORY: ${{ inputs.memory-directory }}
         HARNESS_SESSION_ID: ${{ inputs.session }}
@@ -116,6 +119,7 @@ runs:
         if [[ -n "$HARNESS_ISSUES" ]]; then args+=(--issue "$HARNESS_ISSUES"); fi
         if [[ -n "$HARNESS_CHANGE" ]]; then args+=(--change "$HARNESS_CHANGE"); fi
         if [[ -n "$HARNESS_REFERENCES" ]]; then args+=(--reference "$HARNESS_REFERENCES"); fi
+        if [[ -n "$HARNESS_COMMENT_TEMPLATE" ]]; then args+=(--comment-template "$HARNESS_COMMENT_TEMPLATE"); fi
         if [[ -n "$HARNESS_EVENT" ]]; then args+=(--event "$HARNESS_EVENT"); fi
         args+=(--feedback "$HARNESS_FEEDBACK")
         dotnet "$RUNNER_TEMP/businessharness-bin/BusinessHarness.Cli.dll" "${args[@]}"

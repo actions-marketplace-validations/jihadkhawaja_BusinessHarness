@@ -64,6 +64,10 @@ For Claude, use `HARNESS_PROVIDER=anthropic` and `ANTHROPIC_API_KEY`. Both provi
 
 Results are saved to `harness-results` by default. Host feedback is off unless you enable it. See [configuration](docs/configuration.md) for references, feedback permissions, and review settings.
 
+Customize PR/MR review comments with `--comment-template PATH` or trusted policy.
+Start from the [default template](src/BusinessHarness.Infrastructure/Templates/review-comment.md) and follow the
+[template configuration guide](docs/configuration.md#review-comment-templates).
+
 ## Use in CI
 
 Start with an example for your platform:

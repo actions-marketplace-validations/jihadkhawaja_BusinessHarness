@@ -127,6 +127,15 @@ The report mount must be writable by the selected UID. The source mount must inc
 
 Reports are always written locally; optional `comment` or `auto` feedback publishes only after validation. See [configuration](configuration.md) for dynamic sources, private hosts and feedback semantics. Azure DevOps and Bitbucket retain local reports and exit-code gates; native metadata/feedback adapters currently cover GitHub and GitLab. SARIF can be uploaded separately with the hosting platform’s approved publisher and required permissions. Do not execute model output as workflow commands.
 
+To customize published review comments, set the composite action's
+`comment-template` input to an absolute path from a trusted checkout or
+runner-managed directory. CLI/container callers use `--comment-template PATH`.
+Alternatively, set `reviewCommentTemplate` in trusted policy. Start from the
+[default template](../src/BusinessHarness.Infrastructure/Templates/review-comment.md); see
+[template configuration](configuration.md#review-comment-templates) for placeholders,
+limits, and precedence. The action resolves relative paths from its own directory,
+so prefer absolute paths. Do not select a template from the PR branch being reviewed.
+
 ## Persistent memory and follow-up events
 
 Enable trusted `memory` settings and provide a persistent writable directory separate from the reviewed checkout and reports. Ephemeral runners and containers need an explicitly provisioned memory volume; a temporary workspace does not provide long-term storage. See [memory setup](memory.md), the [memory policy example](../examples/harness.memory.policy.json), and the [GitHub comment workflow](../examples/pipelines/github-follow-up.yml). Authenticated Jira/GitLab webhook receivers can invoke `follow-up --event PATH`, followed by a normal review, or `review --event PATH` for immediate re-review. Repository and actor routing remain controlled by trusted policy. No webhook endpoint is registered automatically.

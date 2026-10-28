@@ -38,6 +38,9 @@ public sealed class CliApplication(Func<string, string?>? environment = null)
             policy.Validate();
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeout.CancelAfter(TimeSpan.FromSeconds(policy.TimeoutSeconds));
+            var commentTemplate = options.CommentTemplatePath is null ? policy.ReviewCommentTemplate :
+                await LoadCommentTemplateAsync(options.CommentTemplatePath, timeout.Token);
+            ReviewCommentTemplate.Validate(commentTemplate);
             var changeRequest = options.Command == "scan" ? null : await ChangeRequestOptions.ResolveAsync(options.ChangeUrl, policy.ChangeRequest, environment, timeout.Token);
             if (options.Feedback != "none" && changeRequest is null)
                 throw new HarnessException(ErrorCode.Configuration, "Feedback requires a pull/merge request.", "Use --change URL, trusted changeRequest policy or GitHub/GitLab CI metadata.");
@@ -106,7 +109,7 @@ public sealed class CliApplication(Func<string, string?>? environment = null)
                 RequiredSecret("JIRA_EMAIL"), RequiredSecret("JIRA_API_TOKEN"), redactor);
             IReferenceResolver? resolver = options.Command == "scan" ? null : new ReferenceResolver(http, policy, environment, redactor, jira);
             IChangeRequestHost? host = changeRequest is null ? null : new ChangeRequestHost(http, changeRequest,
-                RequiredSecret(changeRequest.TokenEnvironment ?? (changeRequest.Platform == "github" ? "GITHUB_TOKEN" : "GITLAB_TOKEN")), redactor);
+                RequiredSecret(changeRequest.TokenEnvironment ?? (changeRequest.Platform == "github" ? "GITHUB_TOKEN" : "GITLAB_TOKEN")), redactor, commentTemplate);
             var useCase = new ReviewUseCase(new GitRepository(options.Repository, policy, redactor), provider,
                 jira, new ReportWriter(redactor), TimeProvider.System, resolver, host, options.Feedback, memory);
             stage = "review";
@@ -162,6 +165,20 @@ public sealed class CliApplication(Func<string, string?>? environment = null)
             throw new HarnessException(ErrorCode.Configuration, "Policy file is empty.", "Supply a JSON policy object.");
     }
 
+    private static async Task<string> LoadCommentTemplateAsync(string path, CancellationToken ct)
+    {
+        SafePaths.RejectLinks(path);
+        await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var reader = new StreamReader(stream, new System.Text.UTF8Encoding(false, true), detectEncodingFromByteOrderMarks: false);
+        var buffer = new char[ReviewCommentTemplate.MaxLength + 1];
+        var count = await reader.ReadBlockAsync(buffer.AsMemory(), ct);
+        if (count > ReviewCommentTemplate.MaxLength)
+            throw new HarnessException(ErrorCode.Configuration, "Review comment template exceeds 16,000 characters.", "Use a smaller trusted Markdown template. Comments are never silently truncated.");
+        var template = new string(buffer, 0, count).TrimStart('\uFEFF');
+        ReviewCommentTemplate.Validate(template);
+        return template;
+    }
+
     private static HarnessException MapFailure(Exception exception, bool cancelled) => exception switch
     {
         HarnessException known => known,
@@ -190,6 +207,7 @@ public sealed class CliApplication(Func<string, string?>? environment = null)
         --reference REFS  Optional SOURCE:ID references; discovered from PR/MR metadata by default
         --change URL      GitHub PR or GitLab MR; auto-detected in GitHub/GitLab CI
         --feedback MODE   none (default), comment, auto (approve pass / reject failure)
+        --comment-template PATH  Explicit TRUSTED UTF-8 Markdown template (review/validate)
         --memory-scope S  off, global, repository or session; overrides trusted memory defaults
         --memory-directory PATH  Persistent trusted storage outside the reviewed checkout
         --session ID      Stable session/thread ID; also HARNESS_SESSION_ID

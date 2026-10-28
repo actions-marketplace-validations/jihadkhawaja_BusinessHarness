@@ -56,14 +56,13 @@ public sealed class ReportWriter(SecretRedactor redactor) : IReportWriter
         finally { if (File.Exists(temporary)) File.Delete(temporary); }
     }
 
-    public static string Markdown(HarnessReport report)
+    public static string Markdown(HarnessReport report) => ReviewCommentTemplate.Render(report);
+
+    internal static IReadOnlyDictionary<string, string> MarkdownSections(HarnessReport report)
     {
         var text = new StringBuilder();
-        text.AppendLine("## BusinessHarness review").AppendLine();
-        text.AppendLine(report.Findings.Count > 0 ? $"**{report.Findings.Count} {(report.Findings.Count == 1 ? "finding" : "findings")} to address**" :
-            report.Passed ? "**No actionable findings reported**" : "**Specification gaps require attention**").AppendLine();
-        text.AppendLine(Escape(report.Summary)).AppendLine();
-        text.AppendLine("### Findings").AppendLine();
+        var status = report.Findings.Count > 0 ? $"**{report.Findings.Count} {(report.Findings.Count == 1 ? "finding" : "findings")} to address**" :
+            report.Passed ? "**No actionable findings reported**" : "**Specification gaps require attention**";
         foreach (var finding in report.Findings.OrderBy(f => SeverityOrder(f.Severity))
             .ThenBy(f => f.Category, StringComparer.Ordinal).ThenBy(f => f.Path, StringComparer.Ordinal).ThenBy(f => f.Line))
         {
@@ -71,17 +70,25 @@ public sealed class ReportWriter(SecretRedactor redactor) : IReportWriter
             text.AppendLine($"  {Escape(finding.Path)}:{finding.Line} — {Escape(finding.Description)}");
         }
         if (report.Findings.Count == 0) text.AppendLine("No actionable findings in the supplied diff.");
-        text.AppendLine().AppendLine("### Specifications").AppendLine();
+        var findings = text.ToString().TrimEnd();
+        text.Clear();
         if (report.Requirements.Count == 0) text.AppendLine("No linked specifications supplied; coverage was not assessed.");
         foreach (var requirement in report.Requirements)
             text.AppendLine($"- **{Escape(requirement.IssueKey)} — {Escape(requirement.Status)}**: {Escape(requirement.Evidence)}");
-        text.AppendLine().AppendLine("<details><summary>Scope and gate</summary>").AppendLine();
+        var specifications = text.ToString().TrimEnd();
+        text.Clear();
         text.AppendLine($"Mode: {Escape(report.Mode)} · Gate: **{(report.Passed ? "passed" : "failed")}**. Findings below the configured severity threshold can coexist with a passing gate.");
         text.AppendLine($"Compared {Escape(report.BaseCommit)} → {Escape(report.HeadCommit)}. Files inspected: {report.ReviewedFiles.Count}; withheld: {report.ExcludedFiles.Count}.");
         text.AppendLine("Diff context only; the review did not execute tests.");
         foreach (var path in report.ExcludedFiles) text.AppendLine($"- Withheld: {Escape(path)}");
-        text.AppendLine().AppendLine("</details>");
-        return text.ToString();
+        return new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["{{status}}"] = status,
+            ["{{summary}}"] = Escape(report.Summary),
+            ["{{findings}}"] = findings,
+            ["{{specifications}}"] = specifications,
+            ["{{scope}}"] = text.ToString().TrimEnd()
+        };
     }
 
     private static int SeverityOrder(string value) => value switch
