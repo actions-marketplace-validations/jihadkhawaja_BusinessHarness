@@ -113,6 +113,56 @@ Draft requests and reviews with withheld files receive comments without automati
 
 Publication is not transactional: GitLab note creation may succeed before approval fails. No write request is retried automatically, and rerunning may produce another comment. Reports describe the review gate; a publishing error also creates `error.json` and returns a nonzero integration exit code, even when the local gate passed. No live write occurs unless a caller selects `comment` or `auto`.
 
+### Review comment templates
+
+The [default Markdown template](../src/BusinessHarness.Infrastructure/Templates/review-comment.md) is embedded in the
+tool and used automatically. To customize PR Conversation comments, MR notes, and
+`auto` review bodies, copy it to a trusted runner location, change its headings or
+section order, and select it explicitly:
+
+```powershell
+businessharness validate --config C:/runner/policy.json --comment-template C:/runner/review-comment.md
+businessharness review --base origin/main --change https://github.com/ORG/REPO/pull/123 --feedback comment --comment-template C:/runner/review-comment.md
+```
+
+You can also store the Markdown directly in trusted policy:
+
+```json
+{
+  "reviewCommentTemplate": "## Team review\n\n{{status}}\n\n{{summary}}\n\n### Risks\n\n{{findings}}\n\n### Acceptance criteria\n\n{{specifications}}\n\n### Review scope\n\n{{scope}}\n"
+}
+```
+
+`--comment-template PATH` overrides `reviewCommentTemplate`; otherwise the built-in
+default applies. The file option is supported by `review` and `validate`. Relative
+paths resolve from the invocation's working directory, independently of `--repo`
+and the policy file. Files must be UTF-8 (an optional BOM is accepted); links and
+reparse points are rejected. Templates are never discovered from the reviewed
+checkout, PR metadata, model output, or follow-up comments. Use a protected trusted
+checkout or runner-managed file, just as for policy. Template literals are trusted
+Markdown and may contain links or mentions, so do not put credentials in them.
+
+Each placeholder below is required **exactly once, on its own line**, with optional
+surrounding whitespace. Keep blank lines around sections for Markdown rendering.
+
+| Placeholder | Inserted content |
+| --- | --- |
+| `{{status}}` | Finding count or no-findings/specification-gap status |
+| `{{summary}}` | Escaped review summary |
+| `{{findings}}` | Every finding, ordered by severity, category, path, and line; includes exact anchors |
+| `{{specifications}}` | Every reference assessment, or an explicit statement that coverage was not assessed |
+| `{{scope}}` | Mode, gate result, compared commits, file counts, withheld paths, and review limitations |
+
+Substitution is literal and runs once; there are no expressions, includes, loops,
+commands, or external fetches. Unknown, malformed, repeated, inline, or missing
+placeholders fail with BH1002 before provider or host calls. Empty templates,
+unsupported control characters, and templates exceeding 16,000 characters (including
+any file BOM) also fail. The final comment still has the existing 60,000-character
+limit and is never silently truncated. Review values retain escaping and redaction;
+the complete rendered comment is also checked for known secrets. A custom template
+does not change the severity gate, approval rules, or feedback opt-in. Local
+`review.md`, JSON, and SARIF reports retain their default formats.
+
 ## Long-term memory
 
 The optional `memory` object configures durable MAGICore memory, global/repository/session scopes, retrieval limits, retention, and allowed agent mentions. Global defaults can come from `HARNESS_MEMORY_CONFIG`; explicit repository memory settings replace them, and invocation settings can override scope/session. See [memory setup](memory.md) for the full contract, follow-up payloads, container persistence and examples.
@@ -123,5 +173,6 @@ Findings include a category: `security`, `maintainability`, or `correctness`.
 Provider schemas require it; older serialized findings without the additive
 property default to `correctness`. Unknown categories fail validation. Local
 credential and sensitive-path findings are categorized as `security`. JSON and
-SARIF preserve the category; Markdown uses the fixed [review template](github-app.md#review-template).
+SARIF preserve the category; Markdown uses the default [review template](github-app.md#review-template),
+with configurable host comment layouts as described above.
 Every finding retains its exact added-line anchor and existing severity gate.

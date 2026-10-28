@@ -10,16 +10,19 @@ public sealed class ChangeRequestHost : IChangeRequestHost
     private readonly ChangeRequestPolicy policy;
     private readonly string token;
     private readonly SecretRedactor redactor;
+    private readonly string? commentTemplate;
     private readonly Uri endpoint;
     private readonly Uri? conversationComments;
 
-    public ChangeRequestHost(SafeHttp http, ChangeRequestPolicy policy, string token, SecretRedactor redactor)
+    public ChangeRequestHost(SafeHttp http, ChangeRequestPolicy policy, string token, SecretRedactor redactor, string? commentTemplate = null)
     {
         policy.Validate(requireIdentity: true);
+        ReviewCommentTemplate.Validate(commentTemplate);
         this.http = http;
         this.policy = policy;
         this.token = token;
         this.redactor = redactor;
+        this.commentTemplate = commentTemplate;
         var apiBase = policy.ApiBase ?? (policy.Platform == "github" ? "https://api.github.com/" : "https://gitlab.com/api/v4/");
         var path = policy.Platform == "github"
             ? "repos/" + string.Join('/', policy.Project.Split('/').Select(Uri.EscapeDataString)) + "/pulls/" + policy.Number
@@ -64,7 +67,7 @@ public sealed class ChangeRequestHost : IChangeRequestHost
             throw new HarnessException(ErrorCode.Configuration, "Change request changed during review; feedback was withheld.", "Rerun against its current head, title and description.");
         var approve = feedback == "auto" && report.Passed && !current.Draft && report.ExcludedFiles.Count == 0;
         var reject = feedback == "auto" && !report.Passed;
-        var markdown = ReportWriter.Markdown(new ReportWriter(redactor).Sanitize(report));
+        var markdown = redactor.Redact(ReviewCommentTemplate.Render(new ReportWriter(redactor).Sanitize(report), commentTemplate));
         if (feedback == "auto" && report.Passed && !approve)
             markdown += "\nAutomatic approval withheld: the request is a draft or some files were withheld.\n";
         if (markdown.Length > 60_000)

@@ -16,6 +16,12 @@ Every expected operational failure is a typed `HarnessException` with a stable e
 | 9 | BH1009 | User cancellation or total timeout | Rerun or adjust timeout within policy limits |
 | 10 | BH1010 | Unexpected internal error | File a sanitized reproduction with version and correlation ID |
 
+Invalid review comment templates use BH1002, including unknown, missing or repeated
+placeholders, unsupported control characters, invalid UTF-8, and templates above
+16,000 characters. Missing/unreadable template files and linked paths use BH1008.
+Rendered comments above 60,000 characters use BH1007 and are withheld before any
+host write. See [template configuration](configuration.md#review-comment-templates).
+
 Example `error.json`:
 
 ```json

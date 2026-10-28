@@ -14,6 +14,7 @@ public sealed record HarnessPolicy
     public string? JiraAcceptanceCriteriaField { get; init; }
     public List<ReferenceSourcePolicy> ReferenceSources { get; init; } = [];
     public ChangeRequestPolicy? ChangeRequest { get; init; }
+    public string? ReviewCommentTemplate { get; init; }
     public MemoryPolicy? Memory { get; init; }
 
     public void Validate()
