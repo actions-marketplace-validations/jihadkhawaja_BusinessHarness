@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" width="1280" height="360" role="img" aria-label="BusinessHarness - Put every change in context">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="hdrBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#121814"/>
+      <stop offset="50%" stop-color="#16201a"/>
+      <stop offset="100%" stop-color="#0e1410"/>
+    </linearGradient>
+
+    <!-- Warm Spotlight -->
+    <radialGradient id="hdrSpot" cx="20%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#e05a36" stop-opacity="0.14"/>
+      <stop offset="60%" stop-color="#e05a36" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Pattern -->
+    <pattern id="hdrDots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.9" fill="#2d3d32" opacity="0.4"/>
+    </pattern>
+
+    <!-- Mark Gradients -->
+    <linearGradient id="hdrMarkBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#26342b"/>
+      <stop offset="100%" stop-color="#141c17"/>
+    </linearGradient>
+    <linearGradient id="hdrOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff7f59"/>
+      <stop offset="50%" stop-color="#e05a36"/>
+      <stop offset="100%" stop-color="#ba3c1b"/>
+    </linearGradient>
+    <linearGradient id="hdrSilver" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#f6f5f1"/>
+      <stop offset="100%" stop-color="#d4d1c5"/>
+    </linearGradient>
+
+    <!-- Shadow -->
+    <filter id="hdrCardShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+
+  <!-- Container Card -->
+  <rect width="1280" height="360" rx="14" fill="url(#hdrBg)"/>
+  <rect width="1280" height="360" rx="14" fill="url(#hdrDots)"/>
+  <rect width="1280" height="360" rx="14" fill="url(#hdrSpot)"/>
+  <rect width="1280" height="360" rx="14" fill="none" stroke="#25352a" stroke-width="1.5"/>
+
+  <!-- Left Side: Brand Lockup & Value Prop -->
+  <g transform="translate(64, 48)">
+    <!-- Eyebrow -->
+    <g font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="600" letter-spacing="1.5">
+      <circle cx="5" cy="5" r="4" fill="#8ce0a0"/>
+      <text x="18" y="9" fill="#8ce0a0">REVIEW ENGINE // BOUNDED CI CONTEXT</text>
+    </g>
+
+    <!-- Brand Emblem + Title -->
+    <g transform="translate(0, 26)">
+      <!-- Emblem -->
+      <rect width="68" height="68" rx="16" fill="url(#hdrMarkBg)" stroke="#374b3f" stroke-width="1.5"/>
+      <path d="M 20 17 V 51 H 27 C 37 51, 37 31, 27 31 H 20" 
+            fill="none" stroke="url(#hdrSilver)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 37 17 V 51" 
+            fill="none" stroke="url(#hdrSilver)" stroke-width="5.5" stroke-linecap="round"/>
+      <path d="M 37 31 C 37 21, 50 21, 50 31 V 51" 
+            fill="none" stroke="url(#hdrOrange)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="50" cy="51" r="2" fill="#8ce0a0"/>
+
+      <!-- Title -->
+      <text x="86" y="44" 
+            fill="#f6f5f1" 
+            font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" 
+            font-size="40" 
+            font-weight="800" 
+            letter-spacing="-1.5">BusinessHarness<tspan fill="#e05a36">.</tspan></text>
+      
+      <!-- Tagline -->
+      <text x="88" y="66" 
+            fill="#cad4cc" 
+            font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+            font-size="15" 
+            font-weight="500">Put every change in context.</text>
+    </g>
+
+    <!-- Value Statement -->
+    <text x="0" y="148" 
+          fill="#8e9f93" 
+          font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+          font-size="14.5" 
+          line-height="1.5">
+      <tspan x="0" dy="0">Connect code diffs to requirements and specifications.</tspan>
+      <tspan x="0" dy="22">Bounded AI review, reference validation, and opt-in memory.</tspan>
+    </text>
+
+    <!-- Capability Pills -->
+    <g transform="translate(0, 218)" font-family="'Consolas', monospace" font-size="11" font-weight="600">
+      <rect x="0" y="0" width="84" height="26" rx="4" fill="#18221c" stroke="#2e3f34" stroke-width="1.2"/>
+      <text x="42" y="17" fill="#8ce0a0" text-anchor="middle">.NET 10</text>
+
+      <rect x="94" y="0" width="138" height="26" rx="4" fill="#18221c" stroke="#2e3f34" stroke-width="1.2"/>
+      <text x="163" y="17" fill="#e05a36" text-anchor="middle">OpenAI + Claude</text>
+
+      <rect x="242" y="0" width="134" height="26" rx="4" fill="#18221c" stroke="#2e3f34" stroke-width="1.2"/>
+      <text x="309" y="17" fill="#9db3a4" text-anchor="middle">Jira &amp; JSON APIs</text>
+
+      <rect x="386" y="0" width="102" height="26" rx="4" fill="#18221c" stroke="#2e3f34" stroke-width="1.2"/>
+      <text x="437" y="17" fill="#9db3a4" text-anchor="middle">Zero Leaks</text>
+    </g>
+  </g>
+
+  <!-- Right Side: Clean Terminal Gate Preview -->
+  <g transform="translate(636, 44)" filter="url(#hdrCardShadow)">
+    <rect width="580" height="272" rx="10" fill="#131915" stroke="#27352d" stroke-width="1.5"/>
+
+    <!-- Titlebar -->
+    <path d="M 0 10 Q 0 0 10 0 H 570 Q 580 0 580 10 V 36 H 0 Z" fill="#1b241e"/>
+    <line x1="0" y1="36" x2="580" y2="36" stroke="#222f27" stroke-width="1"/>
+
+    <circle cx="20" cy="18" r="4.5" fill="#e05a36"/>
+    <circle cx="36" cy="18" r="4.5" fill="#d4a359"/>
+    <circle cx="52" cy="18" r="4.5" fill="#587864"/>
+
+    <text x="74" y="22" fill="#889d90" font-family="'Consolas', monospace" font-size="11">businessharness / diff-review-gate</text>
+
+    <rect x="492" y="8" width="76" height="20" rx="4" fill="#223126"/>
+    <text x="530" y="22" fill="#8ce0a0" font-family="'Consolas', monospace" font-size="9.5" font-weight="700" text-anchor="middle">PASS [clean]</text>
+
+    <!-- Terminal Output -->
+    <g transform="translate(22, 60)" font-family="'Consolas', 'Courier New', monospace" font-size="11.5" xml:space="preserve">
+      <text x="0" y="0" fill="#e8eee9">
+        <tspan fill="#8ce0a0">$</tspan> businessharness review --base origin/main
+      </text>
+      <text x="0" y="24" fill="#5e7567">> Resolving commits: 8e4ed23..HEAD (3 files, +48 -6)</text>
+
+      <g transform="translate(0, 50)">
+        <text x="0" y="0" fill="#8ce0a0">&#10004;</text>
+        <text x="18" y="0" fill="#d2ded4">Base ref resolved in trusted local git tree</text>
+
+        <text x="0" y="22" fill="#8ce0a0">&#10004;</text>
+        <text x="18" y="22" fill="#d2ded4">Secret pattern scan: 0 credentials leaked</text>
+
+        <text x="0" y="44" fill="#8ce0a0">&#10004;</text>
+        <text x="18" y="44" fill="#d2ded4">Spec ref <tspan fill="#e05a36">BH-1042</tspan> verified against criteria</text>
+
+        <text x="0" y="66" fill="#8ce0a0">&#10004;</text>
+        <text x="18" y="66" fill="#d2ded4">Model review: bounded additions validated</text>
+      </g>
+
+      <line x1="0" y1="138" x2="536" y2="138" stroke="#223126" stroke-dasharray="4 4"/>
+
+      <g transform="translate(0, 160)">
+        <text x="0" y="0" fill="#718678">GATE:</text>
+        <text x="50" y="0" fill="#8ce0a0" font-weight="700">PASS (EXIT 0)</text>
+        <text x="175" y="0" fill="#718678">SARIF:</text>
+        <text x="225" y="0" fill="#d2ded4">harness-results/</text>
+        <text x="410" y="0" fill="#e05a36">MEMORY: opt-in</text>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -13,6 +13,7 @@
     <PackageId>BusinessHarness</PackageId>
     <Description>AI repository review, dynamic references, scoped MAGICore memory and optional PR feedback.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://businessharness.net/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jihadkhawaja/BusinessHarness</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -23,6 +24,7 @@
     <ProjectReference Include="../BusinessHarness.Infrastructure/BusinessHarness.Infrastructure.csproj" />
     <None Include="../../README.md" Pack="true" PackagePath="/" />
     <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
+    <None Include="../../assets/icon.png" Pack="true" PackagePath="/" />
     <None Include="../../external/MAGICore/LICENSE" Pack="true" PackagePath="licenses/MAGICore/" />
   </ItemGroup>
 </Project>

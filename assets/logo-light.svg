@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 140" width="740" height="140" role="img" aria-label="BusinessHarness Logo Light">
+  <defs>
+    <linearGradient id="llMarkBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#243028"/>
+      <stop offset="100%" stop-color="#141c17"/>
+    </linearGradient>
+    <linearGradient id="llOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ea6541"/>
+      <stop offset="100%" stop-color="#c4411f"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(10, 10)">
+    <rect width="120" height="120" rx="26" fill="url(#llMarkBg)" stroke="#1a241e" stroke-width="1.5"/>
+    <path d="M 34 30 V 90 H 47 C 64 90, 64 54, 47 54 H 34" 
+          fill="none" stroke="#f6f5f1" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 64 30 V 90" 
+          fill="none" stroke="#f6f5f1" stroke-width="9" stroke-linecap="round"/>
+    <path d="M 64 54 C 64 37, 86 37, 86 54 V 90" 
+          fill="none" stroke="url(#llOrange)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="86" cy="90" r="3" fill="#8ce0a0"/>
+  </g>
+
+  <text x="156" y="74" 
+        fill="#141c17" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" 
+        font-size="48" 
+        font-weight="800" 
+        letter-spacing="-1.5">BusinessHarness<tspan fill="#e05a36">.</tspan></text>
+
+  <text x="158" y="106" 
+        fill="#5a6e61" 
+        font-family="'Consolas', 'Cascadia Code', 'Courier New', monospace" 
+        font-size="12" 
+        font-weight="600" 
+        letter-spacing="2">BOUNDED DIFF REVIEW <tspan fill="#e05a36">&#8226;</tspan> SPEC VALIDATION <tspan fill="#3e8a52">&#8226;</tspan> CI GATE</text>
+</svg>
