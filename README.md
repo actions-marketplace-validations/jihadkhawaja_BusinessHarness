@@ -31,6 +31,10 @@ businessharness scan --repo C:/code/my-project --base origin/main --head HEAD
 
 The scan compares committed changes from the common ancestor of the two refs to `HEAD`. Both refs and their shared history must be available locally; uncommitted changes are ignored.
 
+PR reviews cover additions, modifications, and deletions across all PR commits.
+Both providers receive the same bounded diff and linked ticket/specification
+evidence. Unseen code and runtime behavior cannot establish a passing assessment.
+
 For an AI review, supply `OPENAI_API_KEY` through your shell environment or CI secret store, then choose a model with structured output support:
 
 ```powershell
@@ -51,6 +55,11 @@ Start with an example for your platform:
 [GitHub Actions](examples/pipelines/github.yml) · [GitLab CI](examples/pipelines/gitlab.yml) · [Azure DevOps](examples/pipelines/azure-devops.yml) · [Bitbucket Pipelines](examples/pipelines/bitbucket.yml)
 
 Replace the marked action/image placeholders and configure your CI secrets before running. See the [integration guide](docs/integrations.md) for setup, containers, and publishing.
+
+This repository has [automatic PR reviews](.github/workflows/pr-review.yml) and
+[maintainer-triggered review comments](.github/workflows/review.yml). See
+[automatic review setup](docs/integrations.md#this-repositorys-automatic-pr-review)
+and [mention testing](docs/integrations.md#test-reviews-in-this-repository).
 
 ## Learn more
 
