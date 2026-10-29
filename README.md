@@ -19,7 +19,7 @@
 [![NuGet total downloads](https://img.shields.io/nuget/dt/BusinessHarness.svg)](https://www.nuget.org/packages/BusinessHarness)
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4)](https://dotnet.microsoft.com/download/dotnet/10.0)
-[![License](https://img.shields.io/badge/license-personal%20non--commercial-blue)](LICENSE)
+[![License](https://img.shields.io/badge/License-blue)](LICENSE)
 
 </div>
 
@@ -106,6 +106,14 @@ See [AGENTS.md](AGENTS.md) for contributor guidance and [docs/codex.md](docs/cod
 
 ## License
 
-Copyright (c) 2026 **Jihad Khawaja**. Free for personal, non-commercial use. Commercial or organizational use requires a paid license; contact [jihadkhawaja@outlook.com](mailto:jihadkhawaja@outlook.com).
+Copyright (c) 2026 **Jihad Khawaja**. Free for personal, non-commercial use.
+Organizations employing Jihad Khawaja when license version 1.1 is first made
+available or afterward also receive free organization-wide internal enterprise
+use, including by employees and contractors acting on their behalf. Their rights
+continue after his employment ends and cover future versions he makes available,
+subject to the [employer exception](LICENSE). Resale, external redistribution,
+third-party hosted services, work on behalf of other organizations, and other
+commercial or organizational use require a paid license; contact
+[jihadkhawaja@outlook.com](mailto:jihadkhawaja@outlook.com).
 
 See [LICENSE](LICENSE) for full terms and [third-party notices](THIRD-PARTY-NOTICES.md) for dependency licenses.

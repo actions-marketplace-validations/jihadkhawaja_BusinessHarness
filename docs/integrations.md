@@ -53,8 +53,12 @@ PR-head merge check. The workflow becomes active after reaching `main`.
 
 The public package ID is `BusinessHarness`; its executable is `businessharness`.
 Install an exact version with `dotnet tool install --global BusinessHarness --version 0.1.0`.
-The package includes the personal non-commercial license, third-party notices and
-MAGICore's Apache 2.0 license. Public distribution does not grant commercial rights.
+The package includes the BusinessHarness license, third-party notices and
+MAGICore's Apache 2.0 license. The [BusinessHarness license](../LICENSE) permits
+personal non-commercial use and free internal enterprise use for qualifying
+employers of Jihad Khawaja, including future versions after his employment ends.
+Other commercial or organizational use requires a paid license. Check the license
+included in the specific package version; older packages may carry earlier terms.
 
 [publish-nuget.yml](../.github/workflows/publish-nuget.yml) runs on a **published,
 stable GitHub Release**, starting with `v0.1.0`. Pushing a tag alone does not publish
