@@ -6,6 +6,14 @@ setup, the first review, and troubleshooting; this page is the integration refer
 
 The CLI contract is identical across vendors. A completed review returns 0/1; integration errors return 2–10. Always retain the report directory even on failure. No organization/repository IDs, hosted image names, model IDs or tokens have been invented for you; replace the marked placeholders before deploying.
 
+## Self-managed execution
+
+BusinessHarness supports on-premises and private cloud execution as a CLI,
+internal CI job, or container. GitHub Actions and GitHub App integrations are
+optional. AI reviews transmit context directly to OpenAI or Claude using API credentials.
+See [self-managed deployment](self-hosting.md) for the available options,
+an initial local setup, and network and data boundaries.
+
 ## PR review scope
 
 Every platform and provider uses **merge-base(target, source) → source head**:

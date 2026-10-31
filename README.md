@@ -31,6 +31,21 @@ Review code changes, check them against tickets and specs, and catch potential i
 - **Configurable review skills** from a trusted bank, enabled per pipeline or PR review.
 - **Optional feedback and memory** for PR/MR comments, approvals, and follow-up reviews.
 - **Reports you can use** in JSON, Markdown, and SARIF.
+- **Self-managed deployment** on premises or in private cloud infrastructure, using OpenAI or Claude API credentials.
+
+## Self-managed deployment
+
+BusinessHarness supports on-premises and private cloud deployment as a CLI,
+internal CI job, or container. Organizations manage review execution, credentials,
+trusted policy, report storage, and optional memory. Local Git reviews do not
+require GitHub Actions or a GitHub App.
+
+AI reviews transmit bounded, redacted context directly to OpenAI or Claude using API credentials. The offline `scan` makes no provider,
+host, or reference calls. Local-model inference and air-gapped AI review are not
+currently supported.
+
+See the [self-managed deployment guide](docs/self-hosting.md) for setup,
+network requirements, and ownership of data and credentials.
 
 ## Storyboard: from change to review decision
 
