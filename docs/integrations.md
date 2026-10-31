@@ -69,7 +69,7 @@ Update an existing installation with `dotnet tool update --global BusinessHarnes
 For reproducible CI runs, pin a reviewed version, for example
 `dotnet tool install --global BusinessHarness --version 0.1.0`.
 The package includes the BusinessHarness license, third-party notices and
-MAGICore's Apache 2.0 license. BusinessHarness is licensed under the
+MAGICore's and AgentConnector's Apache 2.0 licenses. BusinessHarness is licensed under the
 [MIT License](../LICENSE).
 
 [publish-nuget.yml](../.github/workflows/publish-nuget.yml) runs on a **published,
@@ -162,6 +162,45 @@ Alternatively, set `reviewCommentTemplate` in trusted policy. Start from the
 [template configuration](configuration.md#review-comment-templates) for placeholders,
 limits, and precedence. The action resolves relative paths from its own directory,
 so prefer absolute paths. Do not select a template from the PR branch being reviewed.
+
+## Jira and other services through AgentConnector
+
+Source builds include the pinned `external/AgentConnector` submodule. Initialize
+both source dependencies with `git submodule update --init --recursive` before
+restoring. The CLI requires .NET and ASP.NET Core **10.0.14 or newer within .NET 10**,
+plus Git; SDK 10.0.403 includes the required runtimes, and the container includes
+the ASP.NET Core runtime. Root MSBuild files adapt the upstream project and keep
+its lock at `locks/AgentConnector.packages.lock.json` without modifying its source.
+
+Native Jira configuration and secret names remain `jiraSite`, `JIRA_EMAIL` and
+`JIRA_API_TOKEN`. To include other catalog sources, copy
+[harness.connectors.policy.json](../examples/harness.connectors.policy.json) to a
+trusted pipeline checkout, replace tenant/cloud IDs and model, and provision the
+source tokens as masked CI secrets. Remove sources you do not use. The example
+combines Jira, Zendesk ticket text and Confluence page text; it has no live-account
+validation and requires the documented provider response fields.
+
+GitHub composite action callers pass the trusted file and source secrets:
+
+```yaml
+with:
+  config: ${{ github.workspace }}/examples/harness.connectors.policy.json
+env:
+  JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+  JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+  ZENDESK_ACCESS_TOKEN: ${{ secrets.ZENDESK_ACCESS_TOKEN }}
+  CONFLUENCE_ACCESS_TOKEN: ${{ secrets.CONFLUENCE_ACCESS_TOKEN }}
+```
+
+Keep the existing action's pinned `uses`, provider key/model, trusted checkout and
+permissions from the platform example. GitLab, Azure DevOps, Bitbucket and local
+runners use the same policy with `--config /trusted/harness.connectors.policy.json`.
+Reference identifiers come from PR/MR metadata or `--reference support:42`.
+Run `businessharness validate --config PATH` to validate actions and credential
+presence without API calls. OAuth tokens must be obtained/refreshed outside this
+CLI. The adapter exposes catalog GET requests only; it does not make all connector
+providers or write actions available to the review model. See
+[the connector configuration contract](configuration.md#agentconnector-reference-actions).
 
 ## Pipeline skill selection
 

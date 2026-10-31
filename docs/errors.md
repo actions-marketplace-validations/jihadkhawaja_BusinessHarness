@@ -1,5 +1,12 @@
 # Error handling and integration recovery
 
+Invalid connector reference actions, write/proxy/body actions, missing or invalid
+catalog inputs and unsafe base URIs use BH1002. `validate` checks configured
+connector requests and secret presence without API calls. Connector HTTP failures,
+malformed responses and text/response limits use the existing BH1004–BH1007
+categories; missing reference content stops the review. See
+[connector configuration](configuration.md#agentconnector-reference-actions).
+
 Every expected operational failure is a typed `HarnessException` with a stable error ID, category and recovery hint. The CLI is the exception boundary: it converts unexpected OS, JSON and cancellation errors to safe diagnostics. Never branch your pipeline on free-text error messages; use exit codes or `error.json`.
 
 | Exit | Error ID | Meaning | Recovery |

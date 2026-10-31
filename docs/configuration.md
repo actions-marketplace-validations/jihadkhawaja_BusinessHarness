@@ -94,6 +94,81 @@ Each source needs a unique lowercase `name` (up to 32 characters; `jira` is rese
 
 Configured source matches take precedence over Jira discovery for overlapping text. Duplicate references are fetched once per run; distinct sources retain distinct identifiers. Unknown links are left as metadata and are not fetched. References inside fetched documents are not recursively followed. Missing documents, invalid content, regex timeouts, authentication errors and limits stop the review. Limits: 20 references, 32,000 characters per document, 128,000 characters combined, 64,000 characters of PR/MR metadata, 100 ms per regex operation and 1 MB per HTTP response.
 
+## AgentConnector reference actions
+
+BusinessHarness builds [AgentConnector](https://github.com/jihadkhawaja/AgentConnector)
+from the pinned `external/AgentConnector` submodule. Native `jiraSite` reads use
+its `jira.get_issue` request builder, preserving Jira key checks, Basic auth,
+requested fields, ADF extraction and acceptance-criteria validation.
+
+Other sources can select a named catalog GET action instead of an `endpoint`:
+
+```json
+{
+  "referenceSources": [
+    {
+      "name": "support",
+      "pattern": "SUPPORT-(?<id>[1-9][0-9]*)",
+      "connector": {
+        "action": "zendesk.get_ticket",
+        "idParameter": "ticket_id",
+        "baseUri": "https://your-team.zendesk.com/"
+      },
+      "titlePath": "ticket.subject",
+      "contentPath": "ticket.description",
+      "tokenEnvironment": "ZENDESK_ACCESS_TOKEN"
+    }
+  ]
+}
+```
+
+`SUPPORT-42` in PR/MR metadata, or `--reference support:42`, resolves a document
+named `support:42`. The same reference coverage gate applies. Start with the
+[combined Jira and connector example](../examples/harness.connectors.policy.json).
+
+| Connector property | Contract |
+| --- | --- |
+| action | Exact action ID from the pinned catalog; must use GET and accept no body |
+| idParameter | Catalog string parameter receiving the discovered identifier |
+| baseUri | Optional trusted HTTPS API base ending in `/`, without query, fragment, credentials or custom port; required for instance providers such as Jira, Confluence and Zendesk |
+| inputs | Optional object of fixed catalog inputs; at most 20 scalar values, each at most 2,000 JSON characters; strings, numbers and booleans retain their types |
+
+Omit `endpoint` when configuring `connector`. Only `idParameter` receives matched
+text; `inputs` cannot also define that parameter. All other required catalog
+parameters must be supplied through `inputs`. Unknown actions/inputs, wrong types,
+missing required parameters, writes, body actions and proxies fail with BH1002
+before any API call. Catalog path identifiers must be single safe segments;
+slashes, backslashes, percent escapes and dot segments are rejected.
+
+Authentication uses the source's existing `tokenEnvironment`,
+`authenticationHeader` and `authenticationScheme` contract. Bearer is the default;
+Basic requires a secret containing the full base64 credential. Public sources can
+omit the token. Provider-required API version/Accept headers come from the catalog.
+Credentials, base URIs, action selection and fixed inputs belong to trusted
+pipeline configuration. Review models cannot choose them.
+
+For an Atlassian OAuth access token, configure an explicit connector source using
+`jira.get_issue` or `confluence.get_page` and the appropriate trusted gateway base,
+such as `https://api.atlassian.com/ex/confluence/YOUR_CLOUD_ID/`. Tokens are
+provisioned by the pipeline owner; BusinessHarness does not perform OAuth login,
+refresh tokens, persist credentials or start a connector server. The native
+`jiraSite` adapter continues to use its documented tenant Basic-auth route.
+
+Connector sources use the same dot-separated string field paths as JSON sources.
+They do not flatten ADF, join arrays, render HTML, follow pagination or recursively
+fetch linked pages. For structured Jira descriptions, use native `jiraSite` or a
+trusted JSON gateway. A Confluence source requires a non-empty `body.storage.value`
+in the response; absent content fails the review. For `confluence.get_page`, the
+BusinessHarness adapter adds the required string input `body_format`, mapped to
+the API's `body-format` query; set `inputs: { "body_format": "storage" }` as in the
+example. This selects the [Confluence page body representation](https://developer.atlassian.com/cloud/confluence/rest/v2/api-group-page/#api-pages-id-get).
+Catalog coverage alone does not make every provider action suitable for a reference
+document. POST/GraphQL actions
+are unavailable. Response/document limits, redaction, cancellation, TLS validation,
+redirect refusal and no automatic retries apply through BusinessHarness's
+`SafeHttp`; AgentConnector's OAuth, transport, DNS pinning and credential store are
+not used. Restrict runner egress as described in [SECURITY.md](../SECURITY.md).
+
 ## Pull/merge request metadata and feedback
 
 In public GitHub Actions PR workflows and GitLab MR pipelines, standard CI variables identify the current request. Outside CI use `--change https://github.com/ORG/REPO/pull/123` or `--change https://gitlab.com/GROUP/REPO/-/merge_requests/123`. No title, description or ticket CLI argument is required. `scan` stays offline even inside CI.

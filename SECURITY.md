@@ -1,5 +1,15 @@
 # Security model
 
+AgentConnector is pinned source at `external/AgentConnector`. BusinessHarness uses
+its catalog and request builder for native Jira and explicitly configured
+reference GET actions. Connector write/body actions and proxies are rejected
+before HTTP dispatch. Policy controls the base URI, action and fixed parameters;
+untrusted metadata supplies only a validated identifier. Requests still use
+BusinessHarness authentication, `SafeHttp` limits, redirect refusal, TLS validation,
+safe diagnostics and redaction. AgentConnector's transport/DNS pinning, OAuth,
+credential persistence and ASP.NET endpoints are not activated. Runner egress
+restrictions remain the deployment boundary.
+
 The runner treats PR content, filenames and external reference text as untrusted data. Review requests contain only bounded, redacted diffs and reference documents resolved through trusted routing policy. Models receive no tools, command execution, filesystem access, write tokens, or ability to fetch URLs. No repository scripts, AGENTS.md instructions, hooks, builds or tests are executed during review. Provider API endpoints are fixed; Jira accepts only an HTTPS atlassian.net tenant. Other reference and host endpoints come from trusted configuration; captured identifiers are URL encoded and cannot change the destination. Restrict runner egress to approved services, including DNS-resolved addresses; endpoint validation is not a network sandbox. HTTP redirects are refused and TLS validation remains enabled.
 
 Git arguments use `ProcessStartInfo.ArgumentList`, without a shell. Refs resolve to commit IDs before comparison. Filename pathspecs are literal. External diff drivers, text conversion and filesystem monitoring are disabled; Git receives an allowlist of process environment variables rather than API secrets. Global/system Git configuration is disabled. **Git metadata and the installed Git binary must come from a trusted CI checkout**, not an uploaded attacker-created `.git` directory.

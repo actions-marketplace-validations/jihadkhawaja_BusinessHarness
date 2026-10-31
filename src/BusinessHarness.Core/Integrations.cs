@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace BusinessHarness.Core;
@@ -13,6 +14,7 @@ public sealed record ReferenceSourcePolicy
     public string? TokenEnvironment { get; init; }
     public string AuthenticationHeader { get; init; } = "Authorization";
     public string AuthenticationScheme { get; init; } = "Bearer";
+    public ConnectorReferencePolicy? Connector { get; init; }
 
     public Regex CreatePattern() => new(Pattern, RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
 
@@ -20,7 +22,8 @@ public sealed record ReferenceSourcePolicy
     {
         if (!Regex.IsMatch(Name, "^[a-z][a-z0-9_-]{0,31}$", RegexOptions.CultureInvariant) || Name == "jira" ||
             Pattern.Length is < 1 or > 2000 || Endpoint.Length > 2000 ||
-            !Endpoint.Contains("{id}", StringComparison.Ordinal) ||
+            (Connector is null && !Endpoint.Contains("{id}", StringComparison.Ordinal)) ||
+            (Connector is not null && Endpoint.Length != 0) ||
             TitlePath.Length is < 1 or > 200 || ContentPath.Length is < 1 or > 200 ||
             AuthenticationHeader is not ("Authorization" or "PRIVATE-TOKEN" or "X-Api-Key") ||
             AuthenticationScheme is not ("Bearer" or "Basic" or "") ||
@@ -31,6 +34,11 @@ public sealed record ReferenceSourcePolicy
             if (!CreatePattern().GetGroupNames().Contains("id", StringComparer.Ordinal)) throw Invalid();
         }
         catch (ArgumentException) { throw Invalid(); }
+        if (Connector is not null)
+        {
+            Connector.Validate();
+            return;
+        }
         var uri = IntegrationEndpoint.Validate(Endpoint.Replace("{id}", "example", StringComparison.Ordinal));
         // Identifiers may only occur in a path or query, never in the credential destination.
         if (Endpoint.IndexOf("{id}", StringComparison.Ordinal) < Endpoint.IndexOf('/', "https://".Length)) throw Invalid();
@@ -39,6 +47,33 @@ public sealed record ReferenceSourcePolicy
 
     private static HarnessException Invalid() => new(ErrorCode.Configuration, "Invalid reference source configuration.",
         "Use a unique source name, a regex with named group id, an HTTPS endpoint template containing {id} in its path/query, and JSON field paths. See docs/configuration.md.");
+}
+
+/// <summary>Only trusted policy selects the action, destination and fixed input values.</summary>
+public sealed record ConnectorReferencePolicy
+{
+    public string Action { get; init; } = "";
+    public string IdParameter { get; init; } = "";
+    public string? BaseUri { get; init; }
+    public Dictionary<string, JsonElement> Inputs { get; init; } = new(StringComparer.Ordinal);
+
+    public void Validate()
+    {
+        if (string.IsNullOrEmpty(Action) || Action.Length is < 3 or > 128 ||
+            string.IsNullOrEmpty(IdParameter) || IdParameter.Length > 128 ||
+            Inputs is null || Inputs.Count > 20 || Inputs.ContainsKey(IdParameter) ||
+            Inputs.Any(p => p.Key.Length is < 1 or > 128 || p.Value.ValueKind is not
+                (JsonValueKind.String or JsonValueKind.Number or JsonValueKind.True or JsonValueKind.False) ||
+                p.Value.GetRawText().Length > 2000))
+            throw new HarnessException(ErrorCode.Configuration, "Invalid connector reference configuration.",
+                "Select a named read-only action, its identifier parameter, and at most 20 fixed scalar inputs. See docs/configuration.md.");
+        if (BaseUri is not null)
+        {
+            var uri = IntegrationEndpoint.Validate(BaseUri);
+            if (BaseUri.Length > 2000 || !BaseUri.EndsWith('/') || uri.Query.Length != 0)
+                throw new HarnessException(ErrorCode.Configuration, "Invalid connector base URI.", "Use a trusted HTTPS base URI ending in / without a query.");
+        }
+    }
 }
 
 public sealed record ChangeRequestPolicy

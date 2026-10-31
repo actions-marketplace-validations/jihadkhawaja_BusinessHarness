@@ -27,7 +27,7 @@ Review code changes, check them against tickets and specs, and catch potential i
 
 - **Unified experience across all pipelines** — the same CLI commands, review policy, report formats, and exit codes across GitHub Actions, GitLab CI, Azure DevOps, and Bitbucket Pipelines.
 - **AI reviews** with OpenAI or Claude, plus an offline credential-pattern scan.
-- **Ticket and spec checks** using Jira Cloud or configured JSON APIs.
+- **Ticket and spec checks** using Jira Cloud, AgentConnector read actions, or configured JSON APIs.
 - **Configurable review skills** from a trusted bank, enabled per pipeline or PR review.
 - **Optional feedback and memory** for PR/MR comments, approvals, and follow-up reviews.
 - **Reports you can use** in JSON, Markdown, and SARIF.
@@ -91,7 +91,8 @@ and [exit codes](docs/errors.md).
 
 ## Quick start
 
-Requires .NET 10 and Git. Install the latest stable release:
+Requires .NET and ASP.NET Core 10.0.14 or newer within .NET 10, plus Git.
+SDK 10.0.403 includes both runtimes; the container bundles them. Install the latest stable release:
 
 ```powershell
 dotnet tool install --global BusinessHarness
@@ -125,6 +126,10 @@ businessharness review --repo C:/code/my-project --base origin/main --head HEAD
 For Claude, use `HARNESS_PROVIDER=anthropic` and `ANTHROPIC_API_KEY`. Both providers use their APIs and require API credentials.
 
 Results are saved to `harness-results` by default. Host feedback is off unless you enable it. See [configuration](docs/configuration.md) for references, feedback permissions, and review settings.
+
+Connect Jira, Zendesk tickets and Confluence pages with the trusted
+[connector policy example](examples/harness.connectors.policy.json) and
+[pipeline setup](docs/integrations.md#jira-and-other-services-through-agentconnector).
 
 Customize PR/MR review comments with `--comment-template PATH` or trusted policy.
 Start from the [default template](src/BusinessHarness.Infrastructure/Templates/review-comment.md) and follow the

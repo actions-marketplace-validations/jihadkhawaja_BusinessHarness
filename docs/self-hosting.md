@@ -15,7 +15,7 @@ host, or reference calls and does not use memory.
 
 | Option | Execution environment | Operational model |
 | --- | --- | --- |
-| Direct CLI | Organization-managed workstation, server, or VM | An approved tool version runs manually or from an internal scheduler. Requires .NET 10 and Git. |
+| Direct CLI | Organization-managed workstation, server, or VM | An approved tool version runs manually or from an internal scheduler. Requires .NET and ASP.NET Core 10.0.14 or newer within .NET 10, plus Git; the SDK includes both runtimes. |
 | Internal CI job | An isolated organization-managed runner or agent | The CLI reviews locally fetched commits using trusted pipeline definitions and policy, with credentials injected through the organization's secret store. |
 | Internal container | Organization-managed container host or CI runner | Images built from the supplied Dockerfile can be distributed through an internal registry and pinned to reviewed digests. The image includes .NET and Git. |
 

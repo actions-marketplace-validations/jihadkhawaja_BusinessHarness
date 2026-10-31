@@ -1,4 +1,12 @@
 <Project>
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Build.props" Condition="'$(MSBuildProjectName)' == 'AgentConnector'" />
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'AgentConnector'">
+    <NuGetLockFilePath>$(MSBuildThisFileDirectory)locks/AgentConnector.packages.lock.json</NuGetLockFilePath>
+    <PackageLicenseFile />
+  </PropertyGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'AgentConnector'">
+    <PackageReference Update="SonarAnalyzer.CSharp" Version="" />
+  </ItemGroup>
   <!-- Adapt the pinned upstream project without modifying the submodule checkout. -->
   <PropertyGroup Condition="'$(MSBuildProjectName)' == 'MagiCore'">
     <TargetFrameworks>net10.0</TargetFrameworks>

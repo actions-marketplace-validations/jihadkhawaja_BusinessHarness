@@ -67,10 +67,7 @@ public sealed partial class ReferenceResolver(SafeHttp http, HarnessPolicy polic
 
     private async Task<ReferenceDocument> FetchAsync(string key, ReferenceSourcePolicy source, string id, CancellationToken ct)
     {
-        var endpoint = IntegrationEndpoint.Validate(source.Endpoint.Replace("{id}", Uri.EscapeDataString(id), StringComparison.Ordinal));
-        var expected = new Uri(source.Endpoint.Replace("{id}", "example", StringComparison.Ordinal));
-        if (endpoint.Authority != expected.Authority) throw new HarnessException(ErrorCode.Configuration, "Reference endpoint changed origin.", "Keep {id} in the path or query of a trusted endpoint.");
-        using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+        using var request = source.Connector is null ? BuildJsonRequest(source, id) : ConnectorReferenceRequests.Build(source.Connector, id);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         request.Headers.UserAgent.ParseAdd("BusinessHarness/0.1.0");
         if (source.TokenEnvironment is not null)
@@ -85,6 +82,14 @@ public sealed partial class ReferenceResolver(SafeHttp http, HarnessPolicy polic
             throw new HarnessException(ErrorCode.ProviderResponse, "Reference source returned missing or empty content.", "Check JSON field paths, reference visibility and the API contract. References are never silently skipped.");
         if (title.Length + content.Length > 32_000) throw Limit();
         return new(redactor.Redact(key), redactor.Redact(title), redactor.Redact(content));
+    }
+
+    private static HttpRequestMessage BuildJsonRequest(ReferenceSourcePolicy source, string id)
+    {
+        var endpoint = IntegrationEndpoint.Validate(source.Endpoint.Replace("{id}", Uri.EscapeDataString(id), StringComparison.Ordinal));
+        var expected = new Uri(source.Endpoint.Replace("{id}", "example", StringComparison.Ordinal));
+        if (endpoint.Authority != expected.Authority) throw new HarnessException(ErrorCode.Configuration, "Reference endpoint changed origin.", "Keep {id} in the path or query of a trusted endpoint.");
+        return new(HttpMethod.Get, endpoint);
     }
 
     private static string? ReadPath(JsonElement element, string path)

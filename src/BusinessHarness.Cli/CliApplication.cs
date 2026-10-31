@@ -37,6 +37,7 @@ public sealed class CliApplication(Func<string, string?>? environment = null)
             };
             policy = policy with { Memory = await MemorySettings.ResolveAsync(policy.Memory, options, environment, cancellationToken) };
             policy.Validate();
+            ConnectorReferenceRequests.ValidateSources(policy.ReferenceSources);
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeout.CancelAfter(TimeSpan.FromSeconds(policy.TimeoutSeconds));
             var commentTemplate = options.CommentTemplatePath is null ? policy.ReviewCommentTemplate :

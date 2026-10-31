@@ -21,9 +21,10 @@ for the affected public contract.
 | `tests/BusinessHarness.Tests` | xUnit v3 tests, fake HTTP contracts and temporary Git fixtures |
 | `scripts` | Verification, offline smoke tests and deliberate dependency maintenance |
 | `external/MAGICore` | Pinned upstream Git submodule; do not edit its checkout for local fixes |
+| `external/AgentConnector` | Pinned upstream connector submodule; adapt builds in root MSBuild files, do not edit its checkout |
 
 Keep dependencies pointing inward. Core and Application must remain independent
-of HTTP/Git implementations and MAGICore. Adapt the upstream build through the
+of HTTP/Git implementations, MAGICore and AgentConnector. Adapt upstream builds through the
 existing root MSBuild files; update the submodule only for an explicit dependency
 change. Preserve licensing and third-party notices.
 
@@ -148,7 +149,7 @@ when the changed behavior is ready:
 dotnet restore BusinessHarness.slnx --locked-mode
 dotnet build BusinessHarness.slnx -c Release --no-restore
 dotnet test --solution BusinessHarness.slnx -c Release --no-build
-dotnet format BusinessHarness.slnx --verify-no-changes --no-restore --exclude external/MAGICore
+dotnet format BusinessHarness.slnx --verify-no-changes --no-restore --exclude external/MAGICore external/AgentConnector
 ```
 
 For Docker/runtime image changes, build and smoke-test the container as well:

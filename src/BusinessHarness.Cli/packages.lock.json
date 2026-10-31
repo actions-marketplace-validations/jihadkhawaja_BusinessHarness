@@ -2,10 +2,13 @@
   "version": 2,
   "dependencies": {
     "net10.0": {
+      "agentconnector": {
+        "type": "Project"
+      },
       "businessharness.application": {
         "type": "Project",
         "dependencies": {
-          "BusinessHarness.Core": "[0.1.3, )"
+          "BusinessHarness.Core": "[0.1.5, )"
         }
       },
       "businessharness.core": {
@@ -14,7 +17,8 @@
       "businessharness.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "BusinessHarness.Application": "[0.1.3, )",
+          "AgentConnector": "[0.1.5, )",
+          "BusinessHarness.Application": "[0.1.5, )",
           "MagiCore": "[1.0.0, )"
         }
       },

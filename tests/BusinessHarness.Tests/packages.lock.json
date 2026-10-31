@@ -110,10 +110,20 @@
           "xunit.v3.runner.common": "[4.0.2]"
         }
       },
+      "agentconnector": {
+        "type": "Project"
+      },
+      "BusinessHarness": {
+        "type": "Project",
+        "dependencies": {
+          "BusinessHarness.Application": "[0.1.5, )",
+          "BusinessHarness.Infrastructure": "[0.1.5, )"
+        }
+      },
       "businessharness.application": {
         "type": "Project",
         "dependencies": {
-          "BusinessHarness.Core": "[0.1.3, )"
+          "BusinessHarness.Core": "[0.1.5, )"
         }
       },
       "businessharness.core": {
@@ -122,15 +132,9 @@
       "businessharness.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "BusinessHarness.Application": "[0.1.3, )",
+          "AgentConnector": "[0.1.5, )",
+          "BusinessHarness.Application": "[0.1.5, )",
           "MagiCore": "[1.0.0, )"
-        }
-      },
-      "BusinessHarness": {
-        "type": "Project",
-        "dependencies": {
-          "BusinessHarness.Application": "[0.1.3, )",
-          "BusinessHarness.Infrastructure": "[0.1.3, )"
         }
       },
       "magicore": {

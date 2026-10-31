@@ -46,7 +46,7 @@ public sealed partial class JiraIssueSource : IIssueSource
     {
         if (!IsIssueKey(key)) throw new HarnessException(ErrorCode.Configuration, "Invalid Jira issue key.", "Use a key such as PROJ-123.");
         var fields = "summary,description" + (acceptanceField is null ? "" : "," + acceptanceField);
-        using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(site, "rest/api/3/issue/" + key + "?fields=" + fields));
+        using var request = ConnectorReferenceRequests.BuildJira(site, key, fields);
         request.Headers.Authorization = authorization;
         request.Headers.Accept.Add(new("application/json"));
         using var body = await http.SendAsync(request, "Jira", cancellationToken);

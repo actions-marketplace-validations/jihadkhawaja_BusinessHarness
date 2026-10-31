@@ -1,5 +1,16 @@
 # Architecture
 
+Reference requests use the provider catalog and request builder from the pinned
+`external/AgentConnector` submodule. Infrastructure owns this dependency;
+Core/Application retain source-neutral policy and ports. Native Jira uses
+`jira.get_issue`; trusted `referenceSources[].connector` configuration can select
+other named GET actions. The CLI validates all configured connector requests
+before network access. Only captured identifiers enter the selected parameter;
+actions, fixed inputs and destinations come from trusted policy. BusinessHarness
+retains authentication, bounded HTTP, redaction, extraction and reference gates.
+No connector server, OAuth lifecycle, credential store, proxy or write action is
+enabled. The compiled library requires the ASP.NET Core 10 shared runtime.
+
 Trusted policy can define a bounded `skillBank` and `enabledSkills`. Invocation
 `--skills` overrides the enabled names. The provider contract redacts and inserts
 only selected skill guidance into system instructions; the model chooses relevant

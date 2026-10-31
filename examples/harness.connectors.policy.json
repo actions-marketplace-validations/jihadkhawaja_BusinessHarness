@@ -1,0 +1,34 @@
+{
+  "provider": "openai",
+  "model": "YOUR_STRUCTURED_OUTPUT_MODEL",
+  "jiraSite": "https://your-team.atlassian.net",
+  "referenceSources": [
+    {
+      "name": "support",
+      "pattern": "SUPPORT-(?<id>[1-9][0-9]*)",
+      "connector": {
+        "action": "zendesk.get_ticket",
+        "idParameter": "ticket_id",
+        "baseUri": "https://your-team.zendesk.com/"
+      },
+      "titlePath": "ticket.subject",
+      "contentPath": "ticket.description",
+      "tokenEnvironment": "ZENDESK_ACCESS_TOKEN"
+    },
+    {
+      "name": "confluence",
+      "pattern": "SPEC-(?<id>[1-9][0-9]*)",
+      "connector": {
+        "action": "confluence.get_page",
+        "idParameter": "page_id",
+        "baseUri": "https://api.atlassian.com/ex/confluence/YOUR_CLOUD_ID/",
+        "inputs": {
+          "body_format": "storage"
+        }
+      },
+      "titlePath": "title",
+      "contentPath": "body.storage.value",
+      "tokenEnvironment": "CONFLUENCE_ACCESS_TOKEN"
+    }
+  ]
+}

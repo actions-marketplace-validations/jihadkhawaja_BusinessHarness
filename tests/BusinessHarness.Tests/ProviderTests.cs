@@ -223,6 +223,7 @@ public sealed class ProviderTests
     {
         using var handler = new StubHttpHandler(request =>
         {
+            Assert.Equal("https://team.atlassian.net/rest/api/3/issue/PROJ-123?fields=summary%2Cdescription%2Ccustomfield_10001", request.RequestUri!.AbsoluteUri);
             Assert.Contains("customfield_10001", request.RequestUri!.Query);
             Assert.Equal("Basic", request.Headers.Authorization!.Scheme);
             return Task.FromResult(StubHttpHandler.Json("""

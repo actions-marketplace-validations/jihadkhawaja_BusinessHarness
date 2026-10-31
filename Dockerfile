@@ -4,12 +4,13 @@ WORKDIR /source
 COPY global.json Directory.Build.props Directory.Build.targets Directory.Packages.props NuGet.Config BusinessHarness.slnx ./
 COPY locks/ locks/
 COPY external/MAGICore/ external/MAGICore/
+COPY external/AgentConnector/ external/AgentConnector/
 COPY src/ src/
 COPY README.md LICENSE ./
 RUN dotnet restore src/BusinessHarness.Cli/BusinessHarness.Cli.csproj --locked-mode --configfile NuGet.Config
 RUN dotnet publish src/BusinessHarness.Cli/BusinessHarness.Cli.csproj -c Release --no-restore -o /app --self-contained false
 
-FROM mcr.microsoft.com/dotnet/runtime:10.0.14@sha256:a3f9f81954b9c810af2ed18849716c8dc74a4707bd0907fdbd69be81554c0f30 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.14@sha256:de0ee358cdd672f7017a003bed21e9ac9ed48a27c922a59b18175b6e82fa7fee AS runtime
 LABEL org.opencontainers.image.authors="Jihad Khawaja <jihadkhawaja@outlook.com>" \
       org.opencontainers.image.licenses="MIT"
 USER root
@@ -18,6 +19,7 @@ WORKDIR /app
 COPY --from=build /app/ ./
 COPY LICENSE ./
 COPY external/MAGICore/LICENSE ./licenses/MAGICore/LICENSE
+COPY external/AgentConnector/LICENSE ./licenses/AgentConnector/LICENSE
 USER $APP_UID
 ENTRYPOINT ["dotnet", "/app/BusinessHarness.Cli.dll"]
 CMD ["--help"]
