@@ -4,12 +4,15 @@ Reference requests use the provider catalog and request builder from the pinned
 `external/AgentConnector` submodule. Infrastructure owns this dependency;
 Core/Application retain source-neutral policy and ports. Native Jira uses
 `jira.get_issue`; trusted `referenceSources[].connector` configuration can select
-other named GET actions. The CLI validates all configured connector requests
+other named GET actions and fixed read queries. The CLI validates all configured connector requests
 before network access. Only captured identifiers enter the selected parameter;
 actions, fixed inputs and destinations come from trusted policy. BusinessHarness
 retains authentication, bounded HTTP, redaction, extraction and reference gates.
-No connector server, OAuth lifecycle, credential store, proxy or write action is
-enabled. The compiled library requires the ASP.NET Core 10 shared runtime.
+The CLI reads pipeline credentials from the environment. Desktop personal connections
+send explicitly supplied credentials directly to provider APIs and can save them
+using the user's OS-protected settings key. Both paths use the same fixed queries
+for reads that require POST. The compiled library
+requires the ASP.NET Core 10 shared runtime.
 
 Trusted policy can define a bounded `skillBank` and `enabledSkills`. Invocation
 `--skills` overrides the enabled names. The provider contract redacts and inserts
@@ -17,6 +20,16 @@ only selected skill guidance into system instructions; the model chooses relevan
 guidance by description within its single review call. Skills add no tools or file
 access and remain subordinate to the shared review rules. Skills are never loaded
 from reviewed repository content. See [skills configuration](configuration.md#review-skills-bank).
+
+When trusted CLI policy enables `agentWorkspace`, Infrastructure binds the
+selected `IReviewProvider` to a tenant and agent in the pinned AgentSpace runtime.
+The host registers only `review.generate`. AgentSpace enforces the agent's provider
+and evidence grants and per-agent concurrency limit before invoking the existing
+provider adapter. The command carries only fixed capability labels. The evidence
+and review result stay in process memory as they pass through the adapter. The
+workspace state supports execution bookkeeping. Application still owns result
+validation and the gate, and the host adapter owns authorized feedback.
+See [AgentSpace configuration](configuration.md#agentspace-review-permissions).
 
 Dependencies point inward:
 
@@ -34,6 +47,7 @@ flowchart LR
 | BusinessHarness.Application | Review use case, result validation, IChangeSource/IReviewProvider/IReferenceResolver/IChangeRequestHost/IIssueSource/IReportWriter/IReviewMemory |
 | BusinessHarness.Infrastructure | Git subprocess isolation, redaction, provider REST adapters, Jira ADF conversion, configured JSON reference routing, GitHub/GitLab metadata and feedback, report persistence |
 | BusinessHarness.Cli | Explicit option/config binding, manual dependency injection, cancellation, safe diagnostics, process exit |
+| BusinessHarness.Desktop | Avalonia UI, trusted connections, in-memory chat, context selection and cancellation; composes Infrastructure/Application |
 | BusinessHarness.Tests | Application, architecture, security, HTTP-contract, CLI and real temporary-Git tests |
 
 The composition root constructs long-lived HTTP resources for one invocation and passes them through interfaces. Application code depends on abstractions, not HTTP or Git implementations. `TimeProvider` makes time an explicit dependency. All I/O is async where supported, accepts cancellation, and owns/disposes its resources. Nullable annotations, strict JSON binding, current analyzers, deterministic builds, warnings-as-errors, lock files and centralized package versions apply repository-wide.
